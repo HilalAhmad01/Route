@@ -1,0 +1,4 @@
+-keepattributes *Annotation*, InnerClasses
+-keep,includedescriptorclasses class app.metroline.data.**$$serializer { *; }
+-keepclassmembers class app.metroline.data.** { *** Companion; }
+-keepclasseswithmembers class app.metroline.data.** { kotlinx.serialization.KSerializer serializer(...); }

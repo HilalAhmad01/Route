@@ -1,0 +1,137 @@
+package app.metroline.data
+
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
+
+@Serializable
+data class LineDto(val id: String, val name: String, val short: String, val color: String, val system: String)
+
+@Serializable
+data class StationDto(
+    val id: String,
+    val name: String,
+    val system: String,
+    val lines: List<String>,
+    val lat: Double,
+    val lon: Double,
+)
+
+@Serializable
+data class PatternDto(
+    val line: String,
+    val stops: List<String>,
+    val towards: String,
+    val km: List<Double>,
+    val min: List<Double>,
+)
+
+@Serializable
+data class WalkDto(val a: String, val b: String, val min: Int)
+
+@Serializable
+data class InterchangeDto(val default: Int, val at: Map<String, Int>)
+
+@Serializable
+data class NetworkDto(
+    val version: String,
+    val source: String,
+    val lines: List<LineDto>,
+    val stations: List<StationDto>,
+    val patterns: List<PatternDto>,
+    val walks: List<WalkDto>,
+    val interchange: InterchangeDto,
+    val fares: Map<String, JsonElement?>,
+)
+
+class Line(val id: String, val name: String, val short: String, val color: Long, val system: String)
+
+class Station(
+    val index: Int,
+    val id: String,
+    val name: String,
+    val system: String,
+    val lines: List<Line>,
+    val lat: Double,
+    val lon: Double,
+) {
+    val isInterchange get() = lines.size > 1
+    override fun toString() = name
+}
+
+class Pattern(
+    val index: Int,
+    val line: Line,
+    val stops: IntArray,
+    val towards: String,
+    val km: DoubleArray,
+    val min: DoubleArray,
+)
+
+class Walk(val a: Int, val b: Int, val minutes: Int)
+
+/** The whole metro network, immutable and loaded once from assets/network.json. */
+class Network(dto: NetworkDto) {
+    val version = dto.version
+    val source = dto.source
+    val lines: List<Line> = dto.lines.map {
+        Line(it.id, it.name, it.short, 0xFF000000 or it.color.removePrefix("#").toLong(16), it.system)
+    }
+    private val lineById = lines.associateBy { it.id }
+    fun line(id: String) = lineById.getValue(id)
+
+    val stations: List<Station> = dto.stations.mapIndexed { i, s ->
+        Station(i, s.id, s.name, s.system, s.lines.map(::line).sortedBy(lines::indexOf), s.lat, s.lon)
+    }
+    private val stationIndex = stations.associate { it.id to it.index }
+    fun station(id: String) = stations[stationIndex.getValue(id)]
+    fun stationOrNull(id: String) = stationIndex[id]?.let { stations[it] }
+
+    val patterns: List<Pattern> = dto.patterns.mapIndexed { i, p ->
+        Pattern(
+            i, line(p.line), p.stops.map(stationIndex::getValue).toIntArray(), p.towards,
+            p.km.toDoubleArray(), p.min.toDoubleArray(),
+        )
+    }
+    val walks: List<Walk> = dto.walks.map { Walk(stationIndex.getValue(it.a), stationIndex.getValue(it.b), it.min) }
+    private val interchangeDefault = dto.interchange.default
+    private val interchangeAt = dto.interchange.at
+    fun interchangeMinutes(s: Station) = interchangeAt[s.name] ?: interchangeDefault
+
+    val fares = FareRules.parse(dto.fares)
+
+    /** For each station, every (pattern, position) it appears at. */
+    val occurrences: List<List<Pair<Int, Int>>> = run {
+        val occ = List(stations.size) { mutableListOf<Pair<Int, Int>>() }
+        for (p in patterns) p.stops.forEachIndexed { i, s -> occ[s] += p.index to i }
+        occ
+    }
+
+    /** Walk links touching each station. */
+    val walksFrom: List<List<Walk>> = run {
+        val w = List(stations.size) { mutableListOf<Walk>() }
+        for (k in walks) {
+            w[k.a] += k
+            w[k.b] += Walk(k.b, k.a, k.minutes)
+        }
+        w
+    }
+
+    /** Stations of a line in travel order, using its longest pattern (and any branch stations after). */
+    fun stationsOf(line: Line): List<List<Station>> {
+        val ps = patterns.filter { it.line == line }
+        val seen = HashSet<Int>()
+        val sections = mutableListOf<List<Station>>()
+        for (p in ps.sortedByDescending { it.stops.size }) {
+            if (p.stops.all { it in seen }) continue
+            sections += p.stops.distinct().map { stations[it] }
+            seen += p.stops.toList()
+        }
+        return sections
+    }
+
+    companion object {
+        private val json = Json { ignoreUnknownKeys = true }
+        fun parse(text: String) = Network(json.decodeFromString(NetworkDto.serializer(), text))
+    }
+}
