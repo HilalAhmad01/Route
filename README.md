@@ -1,4 +1,4 @@
-# Metro
+# Route
 
 **Delhi NCR metro routes in seconds. Offline. No login. No ads. No spying.**
 
@@ -8,10 +8,10 @@ much. That's the app. Delhi Metro, Rapid Metro Gurugram, Noida Aqua Line and Nam
 ## Why this exists
 
 The official DMRC app makes you sign in, shows you sponsored ads and a spin-the-wheel before it
-shows you a train, and asks for permissions a route planner has no business having. Metro does
+shows you a train, and asks for permissions a route planner has no business having. Route does
 one job and does it fast.
 
-| | **Metro** | Official DMRC app (v2.2.7) |
+| | **Route** | Official DMRC app (v2.2.7) |
 |---|---|---|
 | Open app → search → see route | **~5 s** | ~30 s |
 | Login | **None** | Required |
@@ -37,7 +37,7 @@ one job and does it fast.
 
 ## Privacy
 
-Metro asks for **zero permissions**. No internet, no location, no contacts, no analytics, no
+Route asks for **zero permissions**. No internet, no location, no contacts, no analytics, no
 accounts. Your bookmarks and trips live on your phone and are excluded from cloud backup. There
 is nothing to leak because nothing leaves the device.
 

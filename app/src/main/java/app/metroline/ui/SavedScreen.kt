@@ -109,7 +109,7 @@ fun AboutScreen() {
     Hairline()
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal = S.page)) {
         Spacer(Modifier.height(20.dp))
-        Text("Metro ${versionName(ctx)}", style = T.heading)
+        Text("Route ${versionName(ctx)}", style = T.heading)
         Spacer(Modifier.height(8.dp))
         Text(
             "Routes for Delhi Metro, Rapid Metro Gurugram, Noida Metro and Namo Bharat. " +
