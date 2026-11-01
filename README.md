@@ -5,6 +5,19 @@
 Pick two stations, get the route: which line, which direction, where to change, how long, how
 much. That's the app. Delhi Metro, Rapid Metro Gurugram, Noida Aqua Line and Namo Bharat.
 
+<p align="center">
+  <img src="docs/screenshots/01-routes-in-seconds.png" width="24%" alt="Delhi metro routes in seconds" />
+  <img src="docs/screenshots/02-search-like-you-talk.png" width="24%" alt="Search like you talk" />
+  <img src="docs/screenshots/03-real-fares.png" width="24%" alt="Know the real fare" />
+  <img src="docs/screenshots/04-every-leg.png" width="24%" alt="Every leg, every change" />
+</p>
+<p align="center">
+  <img src="docs/screenshots/05-bookmarks.png" width="24%" alt="Home in one tap" />
+  <img src="docs/screenshots/06-network-map.png" width="24%" alt="The whole network, offline" />
+  <img src="docs/screenshots/07-share-as-picture.png" width="24%" alt="Share it as a picture" />
+  <img src="docs/screenshots/08-zero-permissions.png" width="24%" alt="Zero permissions" />
+</p>
+
 ## Why this exists
 
 The official DMRC app makes you sign in, shows you sponsored ads and a spin-the-wheel before it
