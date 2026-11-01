@@ -1,4 +1,3 @@
-"""Convert Lucide SVG icons to Android vector drawables (stroke 1.5, tinted by Compose)."""
 import pathlib
 import re
 import sys
@@ -40,7 +39,7 @@ def main(src, dst):
         name = 'ic_' + svg.stem.replace('-', '_')
         out = pathlib.Path(dst) / f'{name}.xml'
         out.write_text(
-            '<?xml version="1.0" encoding="utf-8"?>\n<!-- Lucide (ISC) -->\n'
+            '<?xml version="1.0" encoding="utf-8"?>\n'
             '<vector xmlns:android="http://schemas.android.com/apk/res/android"\n'
             '    android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">\n'
             f'{body}\n</vector>\n')

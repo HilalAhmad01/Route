@@ -31,9 +31,11 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import app.metroline.R
-import app.metroline.data.Network
+import app.metroline.data.StationSearch
 import app.metroline.data.Station
 
 private val systemName = mapOf(
@@ -42,37 +44,27 @@ private val systemName = mapOf(
 
 fun Station.operatorLabel() = systemName[system] ?: system
 
-/** Prefix matches first, then word starts, then anywhere; ignores spaces, dots and hyphens. */
-fun search(net: Network, query: String): List<Station> {
-    val q = norm(query)
-    if (q.isEmpty()) return net.stations
-    val scored = net.stations.mapNotNull { s ->
-        val n = norm(s.name)
-        val words = s.name.lowercase().split(' ', '-', '(').map(::norm)
-        when {
-            n.startsWith(q) -> 0
-            words.any { it.startsWith(q) } -> 1
-            n.contains(q) -> 2
-            else -> null
-        }?.let { it to s }
-    }
-    return scored.sortedWith(compareBy({ it.first }, { it.second.name })).map { it.second }
-}
-
-private fun norm(s: String) = s.lowercase().filter { it.isLetterOrDigit() }
-
 @Composable
-fun PickerScreen(forFrom: Boolean) {
+fun PickerScreen(target: PickTarget) {
     val d = deps()
     var query by remember { mutableStateOf("") }
-    val results = remember(query) { search(d.net, query) }
+    val results = remember(query) { StationSearch.search(d.net, query) }
     val focus = remember { FocusRequester() }
     LaunchedEffect(Unit) { focus.requestFocus() }
-    fun pick(s: Station) = d.nav.setEnd(forFrom, s.id)
+    fun pick(s: Station): Unit = when (target) {
+        PickTarget.From -> d.nav.setEnd(true, s.id)
+        PickTarget.To -> d.nav.setEnd(false, s.id)
+        is PickTarget.Place -> {
+            d.store.setPlace(target.label, s.id)
+            d.nav.back()
+            if (d.nav.top == Screen.AddPlace) d.nav.back()
+            Unit
+        }
+    }
 
     Column(Modifier.fillMaxSize()) {
         Row(Modifier.fillMaxWidth().height(56.dp).padding(horizontal = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-            IconButton(R.drawable.ic_arrow_left, { d.nav.back() }, C.text)
+            IconButton(R.drawable.ic_arrow_left, { d.nav.back() }, C.text, "Back")
             Row(
                 Modifier
                     .weight(1f)
@@ -86,24 +78,37 @@ fun PickerScreen(forFrom: Boolean) {
                 Ic(R.drawable.ic_search, C.muted, 16.dp)
                 Spacer(Modifier.width(8.dp))
                 Box(Modifier.weight(1f)) {
-                    if (query.isEmpty()) Text(if (forFrom) "From" else "To", style = T.body.copy(color = C.muted))
+                    if (query.isEmpty()) Text(
+                        when (target) {
+                            PickTarget.From -> "From"
+                            PickTarget.To -> "To"
+                            is PickTarget.Place -> "Station for ${target.label}"
+                        },
+                        style = T.body.copy(color = C.muted),
+                    )
                     BasicTextField(
                         query, { query = it },
                         singleLine = true,
                         textStyle = T.body,
                         cursorBrush = SolidColor(C.text),
                         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words, imeAction = ImeAction.Go),
-                        keyboardActions = KeyboardActions(onGo = { results.firstOrNull()?.let(::pick) }),
+                        keyboardActions = KeyboardActions(onGo = { if (query.isNotBlank()) results.firstOrNull()?.let { pick(it.station) } }),
                         modifier = Modifier.fillMaxWidth().focusRequester(focus),
                     )
                 }
-                if (query.isNotEmpty()) Box(Modifier.press({ query = "" }).padding(4.dp)) { Ic(R.drawable.ic_x, C.muted, 16.dp) }
+                if (query.isNotEmpty()) {
+                    Box(Modifier.press({ query = "" }).padding(4.dp).semantics { contentDescription = "Clear search" }) {
+                        Ic(R.drawable.ic_x, C.muted, 16.dp)
+                    }
+                }
             }
         }
         Hairline()
         LazyColumn(Modifier.fillMaxSize()) {
-            items(results, key = { it.id }) { s ->
-                StationRow(s, { pick(s) }, meta = if (s.system != "dmrc") s.operatorLabel() else null)
+            items(results, key = { it.station.id }) { m ->
+                val s = m.station
+                val meta = listOfNotNull(m.alias, s.operatorLabel().takeIf { s.system != "dmrc" }).joinToString(" · ")
+                StationRow(s, { pick(s) }, meta = meta.ifEmpty { null })
             }
             if (results.isEmpty()) item { Empty("No station matches “$query”") }
         }

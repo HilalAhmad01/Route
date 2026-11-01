@@ -27,7 +27,7 @@ fun StationScreen(stationId: String) {
 
     TopBar("", { d.nav.back() })
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
-        Text(s.name, style = T.title, modifier = Modifier.padding(horizontal = S.page))
+        Text(s.displayName, style = T.title, modifier = Modifier.padding(horizontal = S.page))
         Text(s.operatorLabel(), style = T.secondary, modifier = Modifier.padding(horizontal = S.page, vertical = 4.dp))
 
         SectionLabel("Lines")

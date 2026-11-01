@@ -15,6 +15,7 @@ data class StationDto(
     val lines: List<String>,
     val lat: Double,
     val lon: Double,
+    val aliases: List<String> = emptyList(),
 )
 
 @Serializable
@@ -54,8 +55,16 @@ class Station(
     val lines: List<Line>,
     val lat: Double,
     val lon: Double,
+    val aliases: List<String>,
 ) {
     val isInterchange get() = lines.size > 1
+
+    var displayName: String = name
+        internal set
+
+    internal val searchName by lazy { StationSearch.norm(name) }
+    internal val searchWords by lazy { name.lowercase().split(' ', '-', '(').map(StationSearch::norm) }
+    internal val searchAliases by lazy { aliases.map { StationSearch.norm(it) to it } }
     override fun toString() = name
 }
 
@@ -70,7 +79,6 @@ class Pattern(
 
 class Walk(val a: Int, val b: Int, val minutes: Int)
 
-/** The whole metro network, immutable and loaded once from assets/network.json. */
 class Network(dto: NetworkDto) {
     val version = dto.version
     val source = dto.source
@@ -81,8 +89,13 @@ class Network(dto: NetworkDto) {
     fun line(id: String) = lineById.getValue(id)
 
     val stations: List<Station> = dto.stations.mapIndexed { i, s ->
-        Station(i, s.id, s.name, s.system, s.lines.map(::line).sortedBy(lines::indexOf), s.lat, s.lon)
+        Station(i, s.id, s.name, s.system, s.lines.map(::line).sortedBy(lines::indexOf), s.lat, s.lon, s.aliases)
     }
+    init {
+        val shared = stations.groupBy { it.name }.filterValues { it.size > 1 }
+        for (group in shared.values) for (s in group) if (s.system != "dmrc") s.displayName = "${s.name} (${operatorName(s.system)})"
+    }
+
     private val stationIndex = stations.associate { it.id to it.index }
     fun station(id: String) = stations[stationIndex.getValue(id)]
     fun stationOrNull(id: String) = stationIndex[id]?.let { stations[it] }
@@ -100,14 +113,21 @@ class Network(dto: NetworkDto) {
 
     val fares = FareRules.parse(dto.fares)
 
-    /** For each station, every (pattern, position) it appears at. */
     val occurrences: List<List<Pair<Int, Int>>> = run {
         val occ = List(stations.size) { mutableListOf<Pair<Int, Int>>() }
         for (p in patterns) p.stops.forEachIndexed { i, s -> occ[s] += p.index to i }
         occ
     }
 
-    /** Walk links touching each station. */
+    internal val dmrcTrack: List<List<Pair<Int, Double>>> by lazy {
+        val adj = List(stations.size) { mutableListOf<Pair<Int, Double>>() }
+        for (p in patterns) {
+            if (p.line.system != "dmrc") continue
+            for (k in 0 until p.stops.size - 1) adj[p.stops[k]] += p.stops[k + 1] to p.km[k]
+        }
+        adj
+    }
+
     val walksFrom: List<List<Walk>> = run {
         val w = List(stations.size) { mutableListOf<Walk>() }
         for (k in walks) {
@@ -117,12 +137,11 @@ class Network(dto: NetworkDto) {
         w
     }
 
-    /** Stations of a line in travel order, using its longest pattern (and any branch stations after). */
     fun stationsOf(line: Line): List<List<Station>> {
         val ps = patterns.filter { it.line == line }
         val seen = HashSet<Int>()
         val sections = mutableListOf<List<Station>>()
-        for (p in ps.sortedByDescending { it.stops.size }) {
+        for (p in ps.sortedByDescending { it.stops.distinct().size }) {
             if (p.stops.all { it in seen }) continue
             sections += p.stops.distinct().map { stations[it] }
             seen += p.stops.toList()
@@ -131,6 +150,14 @@ class Network(dto: NetworkDto) {
     }
 
     companion object {
+        fun operatorName(system: String) = when (system) {
+            "dmrc", "dmrc_airport" -> "Delhi Metro"
+            "rmgl" -> "Rapid Metro"
+            "nmrc" -> "Noida Metro"
+            "rrts" -> "Namo Bharat"
+            else -> system
+        }
+
         private val json = Json { ignoreUnknownKeys = true }
         fun parse(text: String) = Network(json.decodeFromString(NetworkDto.serializer(), text))
     }

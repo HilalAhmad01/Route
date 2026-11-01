@@ -3,9 +3,11 @@ package app.metroline.ui
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
@@ -37,6 +39,10 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -50,7 +56,7 @@ fun Line.c() = Color(color)
 fun Ic(@DrawableRes id: Int, tint: Color = C.text2, size: Dp = 18.dp, modifier: Modifier = Modifier) =
     Icon(painterResource(id), contentDescription = null, tint = tint, modifier = modifier.size(size))
 
-/** Surface-step press feedback with a tiny scale down; no ripples, no glow. */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Modifier.press(
     onClick: () -> Unit,
@@ -58,6 +64,7 @@ fun Modifier.press(
     rest: Color = Color.Transparent,
     down: Color = C.pressed,
     enabled: Boolean = true,
+    onLongClick: (() -> Unit)? = null,
 ): Modifier {
     val source = remember { MutableInteractionSource() }
     val pressed by source.collectIsPressedAsState()
@@ -66,7 +73,7 @@ fun Modifier.press(
         .scale(if (pressed) 0.98f else 1f)
         .clip(shape)
         .background(bg)
-        .clickable(source, indication = null, enabled = enabled, onClick = onClick)
+        .combinedClickable(source, indication = null, enabled = enabled, onLongClick = onLongClick, onClick = onClick)
 }
 
 @Composable
@@ -83,7 +90,6 @@ fun Card(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> U
     content = content,
 )
 
-/** The signature: a thin rail in each line's colour, like platform signage. */
 @Composable
 fun Rails(lines: List<Line>, height: Dp = 20.dp, modifier: Modifier = Modifier) = Row(
     modifier.height(height),
@@ -95,7 +101,6 @@ fun Rails(lines: List<Line>, height: Dp = 20.dp, modifier: Modifier = Modifier) 
 @Composable
 fun LineDot(line: Line, size: Dp = 8.dp) = Box(Modifier.size(size).clip(CircleShape).background(line.c()))
 
-/** Hollow ring used for interchange stations on rails and the map. */
 @Composable
 fun Ring(color: Color, size: Dp = 12.dp, fill: Color = C.bg) = Canvas(Modifier.size(size)) {
     val w = 2.dp.toPx()
@@ -109,9 +114,7 @@ fun TopBar(title: String, onBack: () -> Unit, subtitle: String? = null, actions:
         Modifier.fillMaxWidth().heightIn(min = 56.dp).padding(horizontal = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Box(Modifier.size(40.dp).press(onBack, RoundedCornerShape(S.radiusRow)), contentAlignment = Alignment.Center) {
-            Ic(R.drawable.ic_arrow_left, C.text)
-        }
+        IconButton(R.drawable.ic_arrow_left, onBack, C.text, "Back")
         Column(Modifier.weight(1f).padding(horizontal = 8.dp)) {
             Text(title, style = T.bodyMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
             if (subtitle != null) Text(subtitle, style = T.secondary, maxLines = 1, overflow = TextOverflow.Ellipsis)
@@ -120,12 +123,30 @@ fun TopBar(title: String, onBack: () -> Unit, subtitle: String? = null, actions:
     }
 
 @Composable
-fun IconButton(@DrawableRes icon: Int, onClick: () -> Unit, tint: Color = C.text2) =
-    Box(Modifier.size(40.dp).press(onClick), contentAlignment = Alignment.Center) { Ic(icon, tint) }
+fun IconButton(@DrawableRes icon: Int, onClick: () -> Unit, tint: Color = C.text2, description: String) = Box(
+    Modifier.size(40.dp).press(onClick).semantics {
+        contentDescription = description
+        role = Role.Button
+    },
+    contentAlignment = Alignment.Center,
+) { Ic(icon, tint) }
 
 @Composable
 fun SectionLabel(text: String, modifier: Modifier = Modifier) =
     Text(text, style = T.label, modifier = modifier.padding(start = S.page, end = S.page, top = 24.dp, bottom = 8.dp))
+
+@Composable
+fun SectionLabel(text: String, action: String, onAction: () -> Unit) = Row(
+    Modifier.fillMaxWidth().padding(start = S.page, end = 8.dp, top = 16.dp),
+    verticalAlignment = Alignment.CenterVertically,
+) {
+    Text(text, style = T.label, modifier = Modifier.weight(1f))
+    Text(
+        action,
+        style = T.label.copy(color = C.text2),
+        modifier = Modifier.press(onAction).padding(horizontal = 12.dp, vertical = 8.dp),
+    )
+}
 
 @Composable
 fun PrimaryButton(text: String, onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true) = Box(
@@ -145,7 +166,6 @@ fun SecondaryButton(text: String, onClick: () -> Unit, modifier: Modifier = Modi
     contentAlignment = Alignment.Center,
 ) { Text(text, style = T.bodyMedium) }
 
-/** Segmented control: the selected option is one surface step up with a hairline. */
 @Composable
 fun Segmented(options: List<String>, selected: Int, onSelect: (Int) -> Unit, modifier: Modifier = Modifier) = Row(
     modifier
@@ -172,7 +192,6 @@ fun Segmented(options: List<String>, selected: Int, onSelect: (Int) -> Unit, mod
     }
 }
 
-/** A station row: rails for its lines, name, and an optional trailing slot. */
 @Composable
 fun StationRow(
     station: Station,
@@ -201,3 +220,25 @@ fun Stat(label: String, value: String, modifier: Modifier = Modifier) = Column(m
 
 @Composable
 fun Empty(text: String) = Text(text, style = T.secondary, modifier = Modifier.padding(horizontal = S.page, vertical = 12.dp))
+
+@Composable
+fun Toggle(on: Boolean) {
+    val track by animateColorAsState(if (on) C.text else C.raised, quick(), label = "track")
+    val x by androidx.compose.animation.core.animateDpAsState(if (on) 18.dp else 2.dp, quick(), label = "thumb")
+    Box(
+        Modifier
+            .width(40.dp)
+            .height(24.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .background(track)
+            .border(1.dp, C.hairline, RoundedCornerShape(12.dp)),
+    ) {
+        Box(
+            Modifier
+                .padding(start = x, top = 2.dp)
+                .size(20.dp)
+                .clip(CircleShape)
+                .background(if (on) C.onPrimary else C.muted),
+        )
+    }
+}

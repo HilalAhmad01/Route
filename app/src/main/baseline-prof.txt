@@ -1,0 +1,6 @@
+HSPLapp/metroline/**->**(**)**
+Lapp/metroline/**;
+HSPLkotlinx/serialization/json/**->**(**)**
+Lkotlinx/serialization/json/**;
+HSPLkotlinx/serialization/internal/**->**(**)**
+Lkotlinx/serialization/internal/**;

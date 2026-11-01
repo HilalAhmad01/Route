@@ -81,7 +81,7 @@ fun LineScreen(lineId: String) {
     LazyColumn(Modifier.fillMaxSize()) {
         sections.forEachIndexed { k, section ->
             if (k > 0) item(key = "branch$k") {
-                SectionLabel(if (line.id == "rapid" && k == 1) "Sector 55-56 branch" else "Branch")
+                SectionLabel(if (line.id == "rapid") "Cyber City loop" else "Branch")
             }
             items(section.size, key = { "$k-$it" }) { i ->
                 LineStationRow(line, section[i], first = i == 0, last = i == section.lastIndex)
@@ -91,7 +91,6 @@ fun LineScreen(lineId: String) {
     }
 }
 
-/** A station on a line: one continuous rail in the line colour, rings at interchanges. */
 @Composable
 private fun LineStationRow(line: Line, s: Station, first: Boolean, last: Boolean) {
     val d = deps()

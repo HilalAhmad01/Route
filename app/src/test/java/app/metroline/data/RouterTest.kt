@@ -4,7 +4,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-/** Expected values are taken from the official DMRC app (captured 1 Nov 2026, a Sunday). */
 class RouterTest {
     private val net = Network.parse(javaClass.classLoader!!.getResource("network.json")!!.readText())
     private val router = Router(net)
@@ -19,8 +18,8 @@ class RouterTest {
         assertEquals("Rajiv Chowk", j.legs[0].to.name)
         assertEquals("Millennium City Centre Gurugram", j.legs[0].towards)
         assertEquals("Noida Electronic City", j.legs[1].towards)
-        assertTrue("minutes ${j.minutes}", j.minutes in 39..43) // official: 41
-        val fare = Fares.forJourney(net, j, FareDay.Sunday)
+        assertTrue("minutes ${j.minutes}", j.minutes in 39..43)
+        val fare = Fares.forJourney(net, j, FareContext(FareDay.Sunday))
         assertEquals(listOf(32), fare.map { it.amount })
     }
 
@@ -30,20 +29,18 @@ class RouterTest {
         assertEquals("Noida Sector 52", j.legs[1].to.name)
         assertEquals("Noida Sector 51", j.legs[2].from.name)
         assertTrue(j.legs[2].boardedByWalk)
-        // Official: 29 stations on the DMRC part.
         assertEquals(29, j.legs[0].stations.size + j.legs[1].stations.size - 1)
-        // Official: Sector 51 .. Knowledge Park II is 16 stations.
         assertEquals(16, j.legs[2].stations.size)
     }
 
     @Test fun adarshNagarToPhase3ViaRapidMetro() {
         val j = fastest("dmrc:Adarsh Nagar", "rmgl:DLF Phase 3")
-        assertEquals(35, j.stationCount - 1) // official counts Sikanderpur once: 35
+        assertEquals(35, j.stationCount)
         assertEquals(listOf("yellow", "rapid"), j.legs.map { it.line.id })
         assertEquals(listOf("Sikanderpur", "DLF Phase 2", "Belvedere Towers", "Cyber City", "Moulsari Avenue", "DLF Phase 3"),
             j.legs[1].stations.map { it.name })
-        assertTrue("minutes ${j.minutes}", j.minutes in 84..92) // official: 88
-        val fare = Fares.forJourney(net, j, FareDay.Sunday)
+        assertTrue("minutes ${j.minutes}", j.minutes in 84..92)
+        val fare = Fares.forJourney(net, j, FareContext(FareDay.Sunday))
         assertEquals(74, fare.sumOf { it.amount!! })
     }
 

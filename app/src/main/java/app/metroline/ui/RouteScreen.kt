@@ -6,6 +6,8 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -30,10 +32,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.foundation.background
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.graphics.layer.drawLayer
+import androidx.compose.ui.graphics.layer.GraphicsLayer
+import androidx.compose.ui.graphics.rememberGraphicsLayer
+import androidx.compose.foundation.border
+import androidx.compose.foundation.shape.RoundedCornerShape
+import kotlinx.coroutines.launch
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -43,16 +56,15 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.metroline.R
-import app.metroline.data.FareDay
-import app.metroline.data.FarePart
+import app.metroline.data.FareContext
+import app.metroline.data.FareQuote
 import app.metroline.data.Fares
+import app.metroline.data.ShareText
 import app.metroline.data.Journey
 import app.metroline.data.Leg
 import app.metroline.data.RouteMode
 import app.metroline.data.Station
 import app.metroline.data.Trip
-import java.time.DayOfWeek
-import java.time.LocalDate
 
 private enum class Option(val label: String) { Fastest("Fastest"), Fewer("Fewer changes"), Airport("Airport Express") }
 
@@ -64,7 +76,7 @@ fun RouteScreen(trip: Trip) {
     LaunchedEffect(trip) { d.store.visited(trip) }
 
     val options = remember(trip) {
-        val base = d.router.options(from, to, allowAirport = false)
+        val base = d.router.options(from, to, allowAirport = false).ifEmpty { d.router.options(from, to, allowAirport = true) }
         buildMap {
             base[RouteMode.Fastest]?.let { put(Option.Fastest, it) }
             base[RouteMode.FewestChanges]?.let { put(Option.Fewer, it) }
@@ -76,75 +88,114 @@ fun RouteScreen(trip: Trip) {
     var selected by remember(trip) { mutableIntStateOf(0) }
     var saved by remember(trip) { mutableStateOf(d.store.isSaved(trip)) }
 
-    TopBar(from.name, { d.nav.back() }, subtitle = "to ${to.name}") {
-        IconButton(R.drawable.ic_arrow_up_down, { d.nav.open(Trip(trip.to, trip.from)) })
+    val keys = options.keys.toList()
+    val journey = keys.getOrNull(selected)?.let(options::get)
+    val fare = remember(journey, d.store.smartCard) {
+        journey?.let { Fares.quote(d.net, it, FareContext.now(d.store.smartCard)) }
+    }
+    val ctx = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val pictureTop = rememberGraphicsLayer()
+    val pictureBottom = rememberGraphicsLayer()
+
+    TopBar("Route", { d.nav.back() }) {
+        if (journey != null && fare != null) IconButton(R.drawable.ic_share_2, {
+            scope.launch {
+                val text = ShareText.of(journey, fare)
+                val picture = runCatching {
+                    stack(pictureTop.toImageBitmap().asAndroidBitmap(), pictureBottom.toImageBitmap().asAndroidBitmap())
+                }.getOrNull()
+                shareRoute(ctx, picture, text)
+            }
+        }, description = "Share route")
+        IconButton(R.drawable.ic_arrow_up_down, { d.nav.open(Trip(trip.to, trip.from)) }, description = "Reverse trip")
         IconButton(R.drawable.ic_bookmark, {
             d.store.toggleSaved(trip)
             saved = !saved
-        }, if (saved) C.text else C.muted)
+        }, if (saved) C.text else C.muted, if (saved) "Remove saved trip" else "Save trip")
     }
     Hairline()
 
-    val keys = options.keys.toList()
-    val journey = keys.getOrNull(selected)?.let(options::get)
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
-        if (journey == null) {
+        if (journey == null || fare == null) {
             Empty("No route found between these stations")
             return@Column
         }
         if (keys.size > 1) {
             Segmented(keys.map { it.label }, selected, { selected = it }, Modifier.padding(start = S.page, end = S.page, top = 16.dp))
         }
-        Summary(journey)
-        Hairline(Modifier.padding(horizontal = S.page))
-        Spacer(Modifier.height(12.dp))
-        Strip(journey)
-        Spacer(Modifier.height(32.dp))
+        Column(Modifier.recordInto(pictureTop)) {
+            Column(Modifier.padding(start = S.page, end = S.page, top = 20.dp)) {
+                Text(from.displayName, style = T.title)
+                Text(
+                    buildAnnotatedString {
+                        withStyle(SpanStyle(color = C.muted)) { append("to ") }
+                        append(to.displayName)
+                    },
+                    style = T.title,
+                )
+            }
+            Summary(journey, fare)
+        }
+        if (journey.legs.any { it.line.system in WhatsAppTicket.systems }) BookTicket(journey)
+        Column(Modifier.recordInto(pictureBottom).padding(bottom = 24.dp)) {
+            Hairline(Modifier.padding(horizontal = S.page))
+            Spacer(Modifier.height(12.dp))
+            Strip(journey)
+        }
+        Spacer(Modifier.height(8.dp))
     }
 }
 
-private fun today() = if (LocalDate.now().dayOfWeek == DayOfWeek.SUNDAY) FareDay.Sunday else FareDay.Weekday
+@Composable
+private fun Modifier.recordInto(layer: GraphicsLayer) = drawWithContent {
+    layer.record { this@drawWithContent.drawContent() }
+    drawLayer(layer)
+}.background(C.bg)
 
 @Composable
-private fun Summary(j: Journey) {
-    val d = deps()
-    val day = today()
-    val parts = remember(j, day) { Fares.forJourney(d.net, j, day) }
-    Column(Modifier.padding(horizontal = S.page, vertical = 20.dp)) {
-        Row(verticalAlignment = Alignment.Bottom) {
-            Text("${j.minutes}", style = T.figure)
-            Text(" min", style = T.secondary, modifier = Modifier.padding(bottom = 4.dp))
+private fun BookTicket(j: Journey) {
+    val ctx = LocalContext.current
+    val elsewhere = j.legs.map { it.line.system }.filter { it !in WhatsAppTicket.systems }.distinct()
+    Column(Modifier.padding(start = S.page, end = S.page, bottom = 20.dp)) {
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .height(44.dp)
+                .border(1.dp, C.hairline, RoundedCornerShape(S.radiusRow))
+                .press({ WhatsAppTicket.open(ctx) }, rest = C.card)
+                .padding(horizontal = 14.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Ic(R.drawable.ic_ticket, C.text2, 16.dp)
+            Spacer(Modifier.width(10.dp))
+            Text("Book ticket on WhatsApp", style = T.body, modifier = Modifier.weight(1f))
+            Ic(R.drawable.ic_chevron_right, C.muted, 16.dp)
         }
-        Spacer(Modifier.height(16.dp))
-        Row(horizontalArrangement = Arrangement.spacedBy(32.dp)) {
-            Stat("Fare", fareText(parts))
+        if (elsewhere.isNotEmpty()) {
+            Spacer(Modifier.height(8.dp))
+            val names = elsewhere.joinToString(" and ") { if (it == "nmrc") "Noida Metro" else "Namo Bharat" }
+            Text("$names tickets are bought separately", style = T.meta)
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun Summary(j: Journey, fare: FareQuote) {
+    Column(Modifier.padding(horizontal = S.page, vertical = 20.dp)) {
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(28.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Stat("Time", "${j.minutes} min")
+            Stat("Fare", fare.headline())
             Stat("Stations", "${j.stationCount}")
             Stat("Changes", "${j.changes}")
         }
-        fareNote(parts, day)?.let {
+        fare.note()?.let {
             Spacer(Modifier.height(12.dp))
             Text(it, style = T.meta)
         }
     }
 }
-
-private fun fareText(parts: List<FarePart>): String {
-    val known = parts.mapNotNull { it.amount }
-    if (known.isEmpty()) return "—"
-    val approx = parts.any { it.amount != null && !it.verified }
-    val partial = known.size < parts.size
-    return (if (approx) "≈ " else "") + "₹${known.sum()}" + (if (partial) "+" else "")
-}
-
-private fun fareNote(parts: List<FarePart>, day: FareDay): String? {
-    val notes = mutableListOf<String>()
-    if (parts.size > 1) notes += parts.filter { it.amount != null }.joinToString(" + ") { "₹${it.amount} ${it.label}" }
-    parts.filter { it.amount == null }.forEach { notes += "${it.label} fare not included" }
-    if (day == FareDay.Sunday && parts.any { it.system == "dmrc" }) notes += "Sunday fare"
-    return notes.takeIf { it.isNotEmpty() }?.joinToString(" · ")
-}
-
-// ---- Journey strip -------------------------------------------------------------------------
 
 private val Gutter = 40.dp
 private val NodeY = 14.dp
@@ -156,10 +207,6 @@ private sealed interface Node {
     data object Tick : Node
 }
 
-/**
- * One row of the strip. The gutter draws the incoming rail above the node and the outgoing
- * rail below it, so rows stack into one continuous line. null = no rail, dashed = walking.
- */
 @Composable
 private fun StripRow(
     top: Color?,
@@ -211,19 +258,24 @@ private fun StripRow(
 @Composable
 private fun Strip(j: Journey) {
     val muted = C.muted
+    if (j.isWalkOnly) {
+        StripRow(null, muted, Node.RingNode(muted), dashedBottom = true) { StationName(j.from, primary = true) }
+        StripRow(muted, muted, Node.None, dashedTop = true, dashedBottom = true) { WalkText("Walk to ${j.to.displayName}", j.minutes) }
+        StripRow(muted, null, Node.Dot(C.text), dashedTop = true) { StationName(j.to, primary = true) }
+        return
+    }
     j.startWalk?.let { w ->
         StripRow(null, muted, Node.RingNode(muted), dashedBottom = true) { StationName(w.station, primary = true) }
         StripRow(muted, muted, Node.None, dashedTop = true, dashedBottom = true) {
-            WalkText("Walk to ${j.legs.first().from.name}", w.minutes)
+            WalkText("Walk to ${j.legs.first().from.displayName}", w.minutes)
         }
     }
     j.legs.forEachIndexed { k, leg ->
         val color = leg.line.c()
         val prev = j.legs.getOrNull(k - 1)
         val next = j.legs.getOrNull(k + 1)
-        val sameStationChange = prev != null && !leg.boardedByWalk
+        val sameStationChange = prev != null && leg.isSameStationChange
 
-        // Boarding (merged with the alighting row when changing at the same station).
         val topColor = when {
             k == 0 -> if (j.startWalk != null) muted else null
             sameStationChange -> prev!!.line.c()
@@ -245,8 +297,7 @@ private fun Strip(j: Journey) {
             }
         }
         RideRows(leg)
-        // Alighting: shown only at the end or before a walk; same-station changes merge into the next boarding row.
-        if (next == null || next.boardedByWalk) {
+        if (next == null || !next.isSameStationChange) {
             val last = next == null && j.endWalk == null
             StripRow(
                 color, if (last) null else muted,
@@ -256,12 +307,12 @@ private fun Strip(j: Journey) {
                 Column(Modifier.padding(bottom = if (last) 0.dp else 8.dp)) { StationName(leg.to, primary = true) }
             }
             if (next != null) StripRow(muted, muted, Node.None, dashedTop = true, dashedBottom = true) {
-                WalkText("Walk to ${next.from.name}", next.changeMinutes)
+                WalkText("Walk to ${next.from.displayName}", next.changeMinutes)
             }
         }
     }
     j.endWalk?.let { w ->
-        StripRow(muted, muted, Node.None, dashedTop = true, dashedBottom = true) { WalkText("Walk to ${w.station.name}", w.minutes) }
+        StripRow(muted, muted, Node.None, dashedTop = true, dashedBottom = true) { WalkText("Walk to ${w.station.displayName}", w.minutes) }
         StripRow(muted, null, Node.Dot(C.text), dashedTop = true) { StationName(w.station, primary = true) }
     }
 }
@@ -297,7 +348,7 @@ private fun RideRows(leg: Leg) {
 private fun StationName(s: Station, primary: Boolean) {
     val d = deps()
     Text(
-        s.name,
+        s.displayName,
         style = if (primary) T.bodyMedium else T.body,
         modifier = Modifier.press({ d.nav.push(Screen.StationDetail(s.id)) }, rest = Color.Transparent)
             .padding(top = 2.dp),
@@ -311,8 +362,13 @@ private fun LineText(leg: Leg) = Row(verticalAlignment = Alignment.CenterVertica
     Text(
         buildAnnotatedString {
             append(leg.line.name)
-            withStyle(SpanStyle(color = C.muted)) { append("  towards ") }
-            append(leg.towards)
+            if (leg.towards.isNotEmpty()) {
+                withStyle(SpanStyle(color = C.muted)) { append("  towards ") }
+                append(leg.towards)
+            } else {
+                withStyle(SpanStyle(color = C.muted)) { append("  next stop ") }
+                append(leg.stations[1].name)
+            }
         },
         style = T.secondary,
     )

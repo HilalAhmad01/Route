@@ -38,7 +38,6 @@ import app.metroline.data.Router
 import app.metroline.data.Store
 import app.metroline.data.Trip
 
-/** Everything a screen needs, provided once at the root. */
 class AppDeps(val net: Network, val router: Router, val store: Store, val nav: Nav)
 
 val LocalDeps = staticCompositionLocalOf<AppDeps> { error("no deps") }
@@ -46,10 +45,17 @@ val LocalDeps = staticCompositionLocalOf<AppDeps> { error("no deps") }
 sealed interface Screen {
     data object Home : Screen
     data class Route(val trip: Trip) : Screen
-    data class Pick(val forFrom: Boolean) : Screen
+    data class Pick(val target: PickTarget) : Screen
+    data object AddPlace : Screen
     data class LineDetail(val lineId: String) : Screen
     data class StationDetail(val stationId: String) : Screen
     data object About : Screen
+}
+
+sealed interface PickTarget {
+    data object From : PickTarget
+    data object To : PickTarget
+    data class Place(val label: String) : PickTarget
 }
 
 enum class Tab(val label: String, val icon: Int) {
@@ -59,7 +65,6 @@ enum class Tab(val label: String, val icon: Int) {
     Saved("Saved", R.drawable.ic_bookmark),
 }
 
-/** A tiny back stack. The plan (from/to) lives here so every screen can set it. */
 class Nav {
     val stack = mutableStateListOf<Screen>(Screen.Home)
     var tab by mutableStateOf(Tab.Plan)
@@ -80,7 +85,6 @@ class Nav {
         return false
     }
 
-    /** Set one end of the trip and jump to the route once both ends are known. */
     fun setEnd(fromEnd: Boolean, stationId: String) {
         if (fromEnd) from = stationId else to = stationId
         if (from == to) if (fromEnd) to = null else from = null
@@ -89,6 +93,14 @@ class Nav {
         val f = from
         val t = to
         if (f != null && t != null) push(Screen.Route(Trip(f, t)))
+    }
+
+    fun startFrom(stationId: String) {
+        from = stationId
+        if (to == stationId) to = null
+        while (stack.size > 1) stack.removeAt(stack.lastIndex)
+        tab = Tab.Plan
+        push(Screen.Pick(PickTarget.To))
     }
 
     fun open(trip: Trip) {
@@ -101,8 +113,7 @@ class Nav {
 }
 
 @Composable
-fun App(net: Network, store: Store, finish: () -> Unit) {
-    val nav = remember { Nav() }
+fun App(net: Network, store: Store, nav: Nav, finish: () -> Unit) {
     val deps = remember { AppDeps(net, Router(net), store, nav) }
     BackHandler { if (!nav.back()) finish() }
 
@@ -128,7 +139,8 @@ fun App(net: Network, store: Store, finish: () -> Unit) {
                         TabBar(tab) { nav.tab = it }
                     }
                     is Screen.Route -> Column(Modifier.fillMaxSize().navBars()) { RouteScreen(screen.trip) }
-                    is Screen.Pick -> Column(Modifier.fillMaxSize().navBars()) { PickerScreen(screen.forFrom) }
+                    is Screen.Pick -> Column(Modifier.fillMaxSize().navBars()) { PickerScreen(screen.target) }
+                    Screen.AddPlace -> Column(Modifier.fillMaxSize().navBars()) { AddPlaceScreen() }
                     is Screen.LineDetail -> Column(Modifier.fillMaxSize().navBars()) { LineScreen(screen.lineId) }
                     is Screen.StationDetail -> Column(Modifier.fillMaxSize().navBars()) { StationScreen(screen.stationId) }
                     Screen.About -> Column(Modifier.fillMaxSize().navBars()) { AboutScreen() }

@@ -1,17 +1,3 @@
-"""Turn tools/raw/osm.json into the app's bundled network file.
-
-Output: app/src/main/assets/network.json
-
-Model
-- station: one physical station complex (interchanges merged across lines of
-  the same system; stations of different systems are linked by walks).
-- pattern: one direction of one line, as an ordered list of station ids with
-  the distance of every hop. Loops and branches are separate patterns.
-- walk: a timed link between two distinct stations (inter-system changes).
-
-Travel times are a calibrated distance model (see TIME below) checked against
-the official app; fares are computed in the app from the rules in FARES.
-"""
 import json
 import math
 import pathlib
@@ -21,37 +7,24 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 RAW = ROOT / "tools" / "raw" / "osm.json"
 OUT = ROOT / "app" / "src" / "main" / "assets" / "network.json"
 
-# OSM relation id -> (line id, towards override or None). One entry per direction.
 PATTERNS = {
-    # Red
     447214: ("red", None), 8037718: ("red", None),
-    # Yellow
     447210: ("yellow", None), 8037712: ("yellow", None),
-    # Blue main + Vaishali branch (branch trains run through towards Dwarka Sector 21)
     8037669: ("blue", None), 447209: ("blue", None),
     8037670: ("blue", "Dwarka Sector 21"), 2535795: ("blue", None),
-    # Green main + Kirti Nagar branch
     8037687: ("green", None), 8037666: ("green", None),
     8037675: ("green", None), 2535796: ("green", None),
-    # Violet
     2535797: ("violet", None), 8037705: ("violet", None),
-    # Pink (ring with a spur to Shiv Vihar)
     8242437: ("pink", None), 8241298: ("pink", None),
-    # Magenta (two open sections)
     8385429: ("magenta", None), 8385430: ("magenta", None),
     20300114: ("magenta", None), 20300115: ("magenta", None),
-    # Grey
     3537978: ("grey", None), 8051592: ("grey", None),
-    # Airport Express
     2535798: ("airport", None), 8037715: ("airport", None),
-    # Aqua (NMRC)
     9268568: ("aqua", None), 9268569: ("aqua", None),
-    # Namo Bharat (RRTS) – full corridor only; depot shuttles are subsets
     17337287: ("rrts", None), 17337288: ("rrts", None),
 }
 
 LINES = [
-    # id, name, short, colour, system
     ("red", "Red Line", "Red", "#E53935", "dmrc"),
     ("yellow", "Yellow Line", "Yellow", "#FFD600", "dmrc"),
     ("blue", "Blue Line", "Blue", "#2F6FE4", "dmrc"),
@@ -67,9 +40,6 @@ LINES = [
 ]
 SYSTEM_OF_LINE = {l[0]: l[4] for l in LINES}
 
-# Rapid Metro is hand-built: the OSM relations disagree on the loop direction.
-# The official app routes Sikanderpur -> Phase 3 via Belvedere Towers, so the
-# loop is one-way Phase 2 -> Belvedere -> Cyber City -> Moulsari -> Phase 3 -> Phase 2.
 RAPID_PATTERNS = [
     (["Sikanderpur", "DLF Phase 1", "Sector 42-43", "Sector 53-54", "Sector 54 Chowk", "Sector 55-56"], None),
     (["Sector 55-56", "Sector 54 Chowk", "Sector 53-54", "Sector 42-43", "DLF Phase 1", "Sikanderpur"], None),
@@ -77,7 +47,6 @@ RAPID_PATTERNS = [
       "DLF Phase 2", "Sikanderpur"], "DLF Phase 3"),
 ]
 
-# Display names, keyed by the cleaned OSM name.
 RENAME = {
     "A.I.I.M.S.": "AIIMS",
     "N.H.P.C. Chowk": "NHPC Chowk",
@@ -93,18 +62,45 @@ RENAME = {
     "New Delhi Airport Express Terminal": "New Delhi",
 }
 
-# Walking links between stations of different systems (minutes).
+ALIASES = {
+    "dmrc:Rajiv Chowk": ["CP", "Connaught Place"],
+    "dmrc:Millennium City Centre Gurugram": ["HUDA City Centre", "HUDA", "MCC"],
+    "dmrc:Lok Kalyan Marg": ["Race Course"],
+    "dmrc:Seva Teerth": ["Udyog Bhawan"],
+    "dmrc:Supreme Court": ["Pragati Maidan"],
+    "dmrc:Netaji Subhash Place": ["NSP"],
+    "dmrc:Jamia Millia Islamia": ["JMI", "Jamia"],
+    "dmrc:Dilli Haat - INA": ["INA"],
+    "dmrc:Vishwa Vidyalaya": ["DU", "North Campus", "Delhi University"],
+    "dmrc:Durgabai Deshmukh South Campus": ["South Campus", "DDSC"],
+    "dmrc:Sir M. Vishweshwaraiah Moti Bagh": ["Moti Bagh"],
+    "dmrc:Kashmere Gate": ["ISBT Kashmere Gate", "Kashmiri Gate"],
+    "dmrc:New Delhi": ["NDLS", "New Delhi Railway Station"],
+    "dmrc:Chandni Chowk": ["Old Delhi Railway Station"],
+    "dmrc:Sarai Kale Khan - Nizamuddin": ["Hazrat Nizamuddin", "Nizamuddin"],
+    "dmrc:Anand Vihar": ["Anand Vihar ISBT"],
+    "dmrc:IGI Airport": ["T3", "Terminal 3", "Airport T3"],
+    "dmrc:Terminal 1 IGI Airport": ["T1", "Airport T1", "Domestic Airport"],
+    "dmrc:Delhi Aerocity": ["Aerocity"],
+    "dmrc:Yashobhoomi Dwarka Sector 25": ["Yashobhoomi", "IICC"],
+    "dmrc:Mayur Vihar - I": ["Mayur Vihar Phase 1"],
+    "dmrc:East Vinod Nagar - Mayur Vihar - II": ["Mayur Vihar Phase 2"],
+    "dmrc:Ramakrishna Ashram Marg": ["RK Ashram"],
+    "dmrc:Jasola Vihar Shaheen Bagh": ["Shaheen Bagh"],
+    "dmrc:Shaheed Sthal": ["New Bus Adda"],
+    "dmrc:Raja Nahar Singh": ["Ballabhgarh"],
+    "dmrc:Sant Surdas (Sihi)": ["Sihi"],
+}
+
 WALKS = [
-    ("dmrc:Noida Sector 52", "nmrc:Noida Sector 51", 10),   # foot-over bridge
-    ("dmrc:Sikanderpur", "rmgl:Sikanderpur", 10),           # official app: 10 min
+    ("dmrc:Noida Sector 52", "nmrc:Noida Sector 51", 10),
+    ("dmrc:Sikanderpur", "rmgl:Sikanderpur", 10),
     ("dmrc:Sarai Kale Khan - Nizamuddin", "rrts:Sarai Kale Khan", 10),
     ("dmrc:New Ashok Nagar", "rrts:New Ashok Nagar", 8),
     ("dmrc:Anand Vihar", "rrts:Anand Vihar", 10),
-    ("dmrc:Dhaula Kuan", "dmrc:Durgabai Deshmukh South Campus", 15),  # skywalk
+    ("dmrc:Dhaula Kuan", "dmrc:Durgabai Deshmukh South Campus", 15),
 ]
 
-# Minutes to change lines inside one DMRC station. Default 5 (official app shows
-# 5 at Rajiv Chowk). Long walks are listed explicitly.
 INTERCHANGE_DEFAULT = 5
 INTERCHANGE = {
     "Kirti Nagar": 4, "Ashok Park Main": 2, "Yamuna Bank": 2, "Mandi House": 4,
@@ -116,10 +112,6 @@ INTERCHANGE = {
     "Maujpur - Babarpur": 4, "Dwarka - Kakrola": 5, "Haiderpur Badli Mor": 5, "Madhuban Chowk": 5,
 }
 
-# Travel time per hop = DWELL + km / SPEED * 60, per system. Calibrated against
-# official app leg times (Yellow 11 hops = 23 min, Blue 6 hops = 12 min,
-# Yellow 29 hops = 69 min, Rapid 5 hops = 9 min): DMRC runs a steady ~34 km/h
-# including stops, so a separate dwell term does not improve the fit.
 TIME = {
     "dmrc": (0.0, 34.3),
     "dmrc_airport": (1.0, 75.0),
@@ -128,7 +120,6 @@ TIME = {
     "rrts": (1.0, 110.0),
 }
 
-# Fares (INR). DMRC: by shortest network distance, two schedules.
 FARES = {
     "dmrc": {
         "slabs_km": [2, 5, 12, 21, 32],
@@ -136,14 +127,11 @@ FARES = {
         "sunday": [11, 11, 21, 32, 43, 54],
         "verified": True,
     },
-    # Rapid Metro: flat within phase 1 (Sikanderpur + loop) or within phase 2,
-    # higher across both. Official app: Adarsh Nagar -> Phase 3 = 54 + 20.
     "rmgl": {"within": 20, "across": 35, "phase1": ["Sikanderpur", "DLF Phase 2", "Belvedere Towers",
              "Cyber City", "Moulsari Avenue", "DLF Phase 3"], "verified": False},
-    # NMRC: by number of stations travelled. Third-party source, not yet verified.
     "nmrc": {"stations": [1, 2, 6, 9, 16], "fares": [10, 15, 20, 30, 40, 50], "verified": False},
-    "dmrc_airport": None,  # not published reliably yet; shown as unavailable
-    "rrts": None,          # NCRTC fares not verified; shown as unavailable
+    "dmrc_airport": None,
+    "rrts": None,
 }
 
 
@@ -163,8 +151,8 @@ def main():
     nodes = {e["id"]: e for e in raw["elements"] if e["type"] == "node"}
     rels = {e["id"]: e for e in raw["elements"] if e["type"] == "relation"}
 
-    stations = {}  # id -> dict
-    coords = {}    # id -> list of (lat, lon)
+    stations = {}
+    coords = {}
 
     def station(system, name, lat, lon, line):
         sysk = "dmrc" if system in ("dmrc", "dmrc_airport") else system
@@ -186,7 +174,6 @@ def main():
                 ids.append(station(system, clean(n["tags"]["name"]), n["lat"], n["lon"], line))
         patterns.append({"line": line, "stops": ids, "towards": towards})
 
-    # Rapid Metro coordinates come from the OSM nodes of either relation.
     rapid_xy = {}
     for rid in (4481323, 7890002):
         for m in rels[rid]["members"]:
@@ -197,7 +184,6 @@ def main():
         ids = [station("rmgl", nm, *rapid_xy[nm], "rapid") for nm in names]
         patterns.append({"line": "rapid", "stops": ids, "towards": towards})
 
-    # Average coordinates per merged station.
     for sid, pts in coords.items():
         stations[sid]["lat"] = round(sum(p[0] for p in pts) / len(pts), 6)
         stations[sid]["lon"] = round(sum(p[1] for p in pts) / len(pts), 6)
@@ -208,7 +194,7 @@ def main():
         hops_km, hops_min = [], []
         for a, b in zip(p["stops"], p["stops"][1:]):
             d = km((stations[a]["lat"], stations[a]["lon"]), (stations[b]["lat"], stations[b]["lon"]))
-            d *= 1.06  # track is longer than the straight line between stations
+            d *= 1.06
             hops_km.append(round(d, 3))
             hops_min.append(round(dwell + d / speed * 60, 2))
         p["km"] = hops_km
@@ -218,12 +204,15 @@ def main():
 
     for a, b, _ in WALKS:
         assert a in stations and b in stations, (a, b)
+    for sid, names in ALIASES.items():
+        assert sid in stations, sid
+        stations[sid]["aliases"] = names
 
     out = {
         "version": raw["osm3s"]["timestamp_osm_base"][:10],
         "source": "OpenStreetMap contributors (ODbL)",
         "lines": [{"id": i, "name": n, "short": s, "color": c, "system": y} for i, n, s, c, y in LINES],
-        "stations": sorted(stations.values(), key=lambda s: s["name"]),
+        "stations": sorted(stations.values(), key=lambda s: (s["name"].lower(), s["system"])),
         "patterns": patterns,
         "walks": [{"a": a, "b": b, "min": m} for a, b, m in WALKS],
         "interchange": {"default": INTERCHANGE_DEFAULT, "at": INTERCHANGE},

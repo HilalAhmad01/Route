@@ -1,14 +1,9 @@
-"""Fetch metro/RRTS route relations for Delhi NCR from OpenStreetMap (Overpass).
-
-Writes tools/raw/osm.json. Run once when the network changes; the app never
-touches the network itself.
-"""
 import json
 import pathlib
 import urllib.parse
 import urllib.request
 
-BBOX = "28.3,76.8,29.1,77.75"  # Delhi NCR incl. Meerut
+BBOX = "28.3,76.8,29.1,77.75"
 QUERY = f"""
 [out:json][timeout:180];
 relation["type"="route"]["route"~"^(subway|light_rail|train|monorail)$"]({BBOX})->.all;

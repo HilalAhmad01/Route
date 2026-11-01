@@ -13,10 +13,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.metroline.R
 
-/**
- * Graphite ramp, pushed one step darker than usual for a blacked-out look. Surfaces stay
- * neutral; the only colour on screen comes from the metro lines themselves.
- */
 object C {
     val bg = Color(0xFF0C0C0D)
     val card = Color(0xFF141416)
@@ -60,7 +56,6 @@ object S {
     val radiusRow = 10.dp
 }
 
-/** One easing curve for every transition. */
 val Ease = CubicBezierEasing(0.22f, 1f, 0.36f, 1f)
 fun <T> quick() = tween<T>(160, easing = Ease)
 fun <T> enter() = tween<T>(320, easing = Ease)

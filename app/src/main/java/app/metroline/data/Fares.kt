@@ -8,9 +8,28 @@ import kotlinx.serialization.json.boolean
 import kotlinx.serialization.json.double
 import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonPrimitive
+import java.time.DayOfWeek
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.ZoneId
+import java.util.Locale
 
-/** Which fare table applies on a given day. DMRC charges less on Sundays and national holidays. */
 enum class FareDay { Weekday, Sunday }
+
+data class FareContext(val day: FareDay, val smartCard: Boolean = false, val offPeak: Boolean = false) {
+    companion object {
+        fun now(smartCard: Boolean) = at(LocalDateTime.now(ZoneId.of("Asia/Kolkata")), smartCard)
+
+        fun at(time: LocalDateTime, smartCard: Boolean) = FareContext(
+            if (time.dayOfWeek == DayOfWeek.SUNDAY) FareDay.Sunday else FareDay.Weekday,
+            smartCard,
+            isOffPeak(time.toLocalTime()),
+        )
+
+        fun isOffPeak(t: LocalTime) =
+            t < LocalTime.of(8, 0) || (t >= LocalTime.of(12, 0) && t < LocalTime.of(17, 0)) || t >= LocalTime.of(21, 0)
+    }
+}
 
 class FareRules(
     val dmrcSlabsKm: List<Double>,
@@ -43,8 +62,35 @@ class FareRules(
     }
 }
 
-/** One ticketed part of a journey: everything ridden on one operator between entering and leaving its gates. */
-class FarePart(val system: String, val label: String, val amount: Int?, val verified: Boolean)
+class FarePart(val system: String, val label: String, val amount: Int?, val verified: Boolean, val paise: Int?)
+
+class FareQuote(val parts: List<FarePart>, val context: FareContext) {
+    private val known = parts.filter { it.amount != null }
+    val approx = known.any { !it.verified }
+    val partial = known.size < parts.size
+    val tokenTotal = known.sumOf { it.amount!! }
+    val paidPaise = known.sumOf { it.paise!! }
+    val smartCardApplied = context.smartCard && known.any { it.paise != it.amount!! * 100 }
+
+    fun headline(): String =
+        if (parts.isEmpty()) "₹0" else if (known.isEmpty()) "—" else (if (approx) "≈ " else "") + rupees(paidPaise) + (if (partial) "+" else "")
+
+    fun note(): String? {
+        val notes = mutableListOf<String>()
+        if (parts.size > 1) notes += known.joinToString(" + ") { "${rupees(it.paise!!)} ${it.label}" }
+        parts.filter { it.amount == null }.forEach { notes += "${it.label} fare not included" }
+        if (smartCardApplied) {
+            notes += (if (context.offPeak) "Smart card, off-peak" else "Smart card") + " · token ₹$tokenTotal"
+        }
+        if (context.day == FareDay.Sunday && parts.any { it.system == "dmrc" }) notes += "Sunday fare"
+        return notes.takeIf { it.isNotEmpty() }?.joinToString(" · ")
+    }
+
+    companion object {
+        fun rupees(paise: Int) =
+            if (paise % 100 == 0) "₹${paise / 100}" else "₹%d.%02d".format(Locale.ROOT, paise / 100, paise % 100)
+    }
+}
 
 object Fares {
     private val labels = mapOf(
@@ -58,7 +104,6 @@ object Fares {
         return table[slab]
     }
 
-    /** Rapid Metro: flat fare within phase 1 (the loop) or within phase 2; Sikanderpur belongs to both. */
     fun rapid(rules: FareRules, from: Station, to: Station): Int {
         fun inPhase1(s: Station) = s.name in rules.rapidPhase1
         fun inPhase2(s: Station) = s.name !in rules.rapidPhase1 || s.name == "Sikanderpur"
@@ -72,18 +117,16 @@ object Fares {
         return rules.aquaFares[slab]
     }
 
-    /**
-     * Split a journey into fare parts. DMRC charges by the shortest network distance between
-     * the entry and exit station, not the distance actually ridden, so that is computed separately.
-     */
-    fun forJourney(net: Network, journey: Journey, day: FareDay): List<FarePart> {
+    fun quote(net: Network, journey: Journey, context: FareContext) = FareQuote(forJourney(net, journey, context), context)
+
+    fun forJourney(net: Network, journey: Journey, context: FareContext): List<FarePart> {
+        val day = context.day
         val parts = mutableListOf<FarePart>()
         var i = 0
         val legs = journey.legs
         while (i < legs.size) {
             val system = legs[i].line.system
             var j = i
-            // One ticket per operator: interchanges inside the same system don't start a new fare.
             while (j + 1 < legs.size && legs[j + 1].line.system == system) j++
             val from = legs[i].from
             val to = legs[j].to
@@ -93,21 +136,18 @@ object Fares {
                 "nmrc" -> aqua(net.fares, (i..j).sumOf { legs[it].hops })
                 else -> null
             }
-            parts += FarePart(system, labels.getValue(system), amount, net.fares.verified[system] == true)
+            val verified = net.fares.verified[system] == true ||
+                (system == "rmgl" && amount == net.fares.rapidWithin)
+            val percent = if (context.smartCard && system == "dmrc") (if (context.offPeak) 80 else 90) else 100
+            parts += FarePart(system, labels.getValue(system), amount, verified, amount?.let { it * percent })
             i = j + 1
         }
         return parts
     }
 
-    /** Shortest track distance between two DMRC stations over the regular (non Airport Express) lines. */
     fun shortestKm(net: Network, from: Station, to: Station): Double {
-        val n = net.stations.size
-        val dist = DoubleArray(n) { Double.MAX_VALUE }
-        val adj = List(n) { mutableListOf<Pair<Int, Double>>() }
-        for (p in net.patterns) {
-            if (p.line.system != "dmrc") continue
-            for (k in 0 until p.stops.size - 1) adj[p.stops[k]] += p.stops[k + 1] to p.km[k]
-        }
+        val dist = DoubleArray(net.stations.size) { Double.MAX_VALUE }
+        val adj = net.dmrcTrack
         val pq = java.util.PriorityQueue<Pair<Double, Int>>(compareBy { it.first })
         dist[from.index] = 0.0
         pq += 0.0 to from.index
