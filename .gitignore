@@ -23,6 +23,7 @@ captures/
 *.apk
 *.aab
 *.aar
+dist/
 
 # Keystore & Signing credentials
 keystore.properties
