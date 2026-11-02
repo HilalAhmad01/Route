@@ -12,11 +12,12 @@ object ShareText {
         }
         journey.startWalk?.let { appendLine("Walk to ${journey.legs.first().from.displayName} (${it.minutes} min)") }
         journey.legs.forEachIndexed { k, leg ->
-            val line = "${leg.line.name} ${leg.direction}"
+            val direction = leg.direction + (leg.platform?.let { " · platform $it" } ?: "")
+            val line = "${leg.line.name} $direction"
             val ride = "${stops(leg.hops)} to ${leg.to.displayName}"
             appendLine(
                 when {
-                    k == 0 -> "${leg.line.name} from ${leg.from.displayName} ${leg.direction}, $ride"
+                    k == 0 -> "${leg.line.name} from ${leg.from.displayName} $direction, $ride"
                     leg.isSameStationChange -> "Change to $line (${leg.changeMinutes} min), $ride"
                     else -> "Walk to ${leg.from.displayName} (${leg.changeMinutes} min), then $line, $ride"
                 },

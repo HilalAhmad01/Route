@@ -2,6 +2,7 @@ package app.metroline.data
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.time.LocalTime
@@ -42,6 +43,17 @@ class FeaturesTest {
         assertEquals("Mayur Vihar - I", top("mayur vihar i").station.name)
     }
 
+    @Test fun legsKnowTheirBoardingPlatform() {
+        val j = route("dmrc:Rajiv Chowk", "dmrc:Pul Bangash")
+        assertEquals(listOf("yellow" to "2", "red" to "3"), j.legs.map { it.line.id to it.platform })
+        val back = route("dmrc:Pul Bangash", "dmrc:Rajiv Chowk")
+        assertTrue(back.legs.all { it.platform != null })
+    }
+
+    @Test fun noPlatformAtATerminus() {
+        assertNull(route("dmrc:Rithala", "dmrc:Rohini West").legs.single().platform)
+    }
+
     @Test fun offPeakWindows() {
         fun op(h: Int, m: Int) = FareContext.isOffPeak(LocalTime.of(h, m))
         assertTrue(op(7, 59)); assertFalse(op(8, 0))
@@ -76,8 +88,8 @@ class FeaturesTest {
             Adarsh Nagar → Akshardham
             ${j.minutes} min · ₹43 · 18 stations · 1 change
 
-            Yellow Line from Adarsh Nagar towards Millennium City Centre Gurugram, 11 stops to Rajiv Chowk
-            Change to Blue Line towards Noida Electronic City (5 min), 6 stops to Akshardham
+            Yellow Line from Adarsh Nagar towards Millennium City Centre Gurugram · platform 1, 11 stops to Rajiv Chowk
+            Change to Blue Line towards Noida Electronic City · platform 3 (5 min), 6 stops to Akshardham
             """.trimIndent(),
             text,
         )

@@ -9,6 +9,15 @@ Station names, positions and line order in `app/src/main/assets/network.json` (a
 https://www.openstreetmap.org/copyright. The derived network data is offered under the same
 licence.
 
+## Platform numbers — Delhi Metro Rail Corporation
+Boarding platform numbers (the `platforms` table in `network.json`, from
+`tools/raw/dmrc_platforms.json`) were read from the journey planner on
+https://www.delhimetrorail.com using `tools/fetch_platforms.py`. They are facts published by
+DMRC, not covered by the ODbL above, and may change when DMRC reassigns platforms. Where the
+planner gives no platform, or its number disagrees with other sources, the platform was filled in
+by hand from delhimetrorail.info, yometro.com and Wikipedia; see `MANUAL_PLATFORMS` in
+`tools/build_network.py`.
+
 ## Icons — Lucide
 Line icons in `app/src/main/res/drawable/ic_*.xml` (except `ic_launcher_fg.xml`) are converted
 from Lucide (https://lucide.dev). ISC License, see `licenses/Lucide-ISC.txt`.

@@ -1,0 +1,1977 @@
+{
+ "fetched": "2026-11-02",
+ "platforms": {
+  "dmrc:AIIMS|yellow|dmrc:Dilli Haat - INA": {
+   "platform": "2",
+   "towards": "SAMAYPUR BADLI"
+  },
+  "dmrc:AIIMS|yellow|dmrc:Green Park": {
+   "platform": "1",
+   "towards": "MILLENNIUM CITY CENTRE GURUGRAM"
+  },
+  "dmrc:Adarsh Nagar|yellow|dmrc:Azadpur": {
+   "platform": "1",
+   "towards": "MILLENNIUM CITY CENTRE GURUGRAM"
+  },
+  "dmrc:Adarsh Nagar|yellow|dmrc:Jahangirpuri": {
+   "platform": "2",
+   "towards": "SAMAYPUR BADLI"
+  },
+  "dmrc:Akshardham|blue|dmrc:Mayur Vihar - I": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Akshardham|blue|dmrc:Yamuna Bank": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Anand Vihar|blue|dmrc:Kaushambi": {
+   "platform": "1",
+   "towards": "VAISHALI"
+  },
+  "dmrc:Anand Vihar|pink|dmrc:IP Extension": {
+   "platform": "4",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:Arjan Garh|yellow|dmrc:Ghitorni": {
+   "platform": "2",
+   "towards": "SAMAYPUR BADLI"
+  },
+  "dmrc:Arjan Garh|yellow|dmrc:Guru Dronacharya": {
+   "platform": "1",
+   "towards": "MILLENNIUM CITY CENTRE GURUGRAM"
+  },
+  "dmrc:Arthala|red|dmrc:Hindon River": {
+   "platform": "2",
+   "towards": "SHAHEED STHAL ( NEW BUS ADDA)"
+  },
+  "dmrc:Arthala|red|dmrc:Mohan Nagar": {
+   "platform": "1",
+   "towards": "RITHALA"
+  },
+  "dmrc:Ashok Park Main|green|dmrc:Inderlok": {
+   "platform": "2",
+   "towards": "KIRTI NAGAR"
+  },
+  "dmrc:Ashok Park Main|green|dmrc:Punjabi Bagh": {
+   "platform": "1",
+   "towards": "BRIG. HOSHIAR SINGH"
+  },
+  "dmrc:Ashok Park Main|green|dmrc:Satguru Ramsingh Marg": {
+   "platform": "2",
+   "towards": "KIRTI NAGAR"
+  },
+  "dmrc:Ashram|pink|dmrc:Sarai Kale Khan - Nizamuddin": {
+   "platform": "1",
+   "towards": "MAUJPUR-BABARPUR"
+  },
+  "dmrc:Ashram|pink|dmrc:Vinobapuri": {
+   "platform": "2",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:Azadpur|pink|dmrc:Majlis Park": {
+   "platform": "4",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:Azadpur|pink|dmrc:Shalimar Bagh": {
+   "platform": "3",
+   "towards": "MAUJPUR-BABARPUR"
+  },
+  "dmrc:Azadpur|yellow|dmrc:Adarsh Nagar": {
+   "platform": "2",
+   "towards": "SAMAYPUR BADLI"
+  },
+  "dmrc:Azadpur|yellow|dmrc:Model Town": {
+   "platform": "1",
+   "towards": "MILLENNIUM CITY CENTRE GURUGRAM"
+  },
+  "dmrc:Badarpur|violet|dmrc:Sarai": {
+   "platform": "1",
+   "towards": "RAJA NAHAR SINGH (BALLABHGARH)"
+  },
+  "dmrc:Badarpur|violet|dmrc:Tughlakabad": {
+   "platform": "2",
+   "towards": "KASHMERE GATE"
+  },
+  "dmrc:Badhkal Mor|violet|dmrc:Old Faridabad": {
+   "platform": "1",
+   "towards": "RAJA NAHAR SINGH (BALLABHGARH)"
+  },
+  "dmrc:Badhkal Mor|violet|dmrc:Sector 28": {
+   "platform": "2",
+   "towards": "KASHMERE GATE"
+  },
+  "dmrc:Bahadurgarh City|green|dmrc:Brigadier Hoshiyar Singh": {
+   "platform": "1",
+   "towards": "BRIG. HOSHIAR SINGH"
+  },
+  "dmrc:Bahadurgarh City|green|dmrc:Pandit Shree Ram Sharma": {
+   "platform": "2",
+   "towards": "KIRTI NAGAR"
+  },
+  "dmrc:Barakhambha Road|blue|dmrc:Mandi House": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Barakhambha Road|blue|dmrc:Rajiv Chowk": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Bata Chowk|violet|dmrc:Escorts Mujesar": {
+   "platform": "1",
+   "towards": "RAJA NAHAR SINGH (BALLABHGARH)"
+  },
+  "dmrc:Bata Chowk|violet|dmrc:Neelam Chowk Ajronda": {
+   "platform": "2",
+   "towards": "KASHMERE GATE"
+  },
+  "dmrc:Bhajanpura|pink|dmrc:Khajuri Khas": {
+   "platform": "2",
+   "towards": "MAUJPUR-BABARPUR"
+  },
+  "dmrc:Bhajanpura|pink|dmrc:Yamuna Vihar": {
+   "platform": "1",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:Bhalaswa|magenta|dmrc:Haiderpur Badli Mor": {
+   "platform": "1",
+   "towards": "DEEPALI CHOWK"
+  },
+  "dmrc:Bhalaswa|magenta|dmrc:Majlis Park": {
+   "platform": "2",
+   "towards": "MAJLIS PARK"
+  },
+  "dmrc:Bhikaji Cama Place|pink|dmrc:Sarojini Nagar": {
+   "platform": "1",
+   "towards": "MAUJPUR-BABARPUR"
+  },
+  "dmrc:Bhikaji Cama Place|pink|dmrc:Sir M. Vishweshwaraiah Moti Bagh": {
+   "platform": "2",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:Botanical Garden|blue|dmrc:Noida Golf Course": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Botanical Garden|blue|dmrc:Noida Sector 18": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Botanical Garden|magenta|dmrc:Okhla Bird Sanctuary": {
+   "platform": "4",
+   "towards": "KRISHNA PARK EXTENSION"
+  },
+  "dmrc:Brigadier Hoshiyar Singh|green|dmrc:Bahadurgarh City": {
+   "platform": "2",
+   "towards": "KIRTI NAGAR"
+  },
+  "dmrc:Burari|pink|dmrc:Jharoda Majra": {
+   "platform": "1",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:Burari|pink|dmrc:Majlis Park": {
+   "platform": "2",
+   "towards": "MAUJPUR-BABARPUR"
+  },
+  "dmrc:Central Secretariat|violet|dmrc:Janpath": {
+   "platform": "4",
+   "towards": "KASHMERE GATE"
+  },
+  "dmrc:Central Secretariat|violet|dmrc:Khan Market": {
+   "platform": "3",
+   "towards": "RAJA NAHAR SINGH (BALLABHGARH)"
+  },
+  "dmrc:Central Secretariat|yellow|dmrc:Patel Chowk": {
+   "platform": "2",
+   "towards": "SAMAYPUR BADLI"
+  },
+  "dmrc:Central Secretariat|yellow|dmrc:Seva Teerth": {
+   "platform": "1",
+   "towards": "MILLENNIUM CITY CENTRE GURUGRAM"
+  },
+  "dmrc:Chandni Chowk|yellow|dmrc:Chawri Bazar": {
+   "platform": "1",
+   "towards": "MILLENNIUM CITY CENTRE GURUGRAM"
+  },
+  "dmrc:Chandni Chowk|yellow|dmrc:Kashmere Gate": {
+   "platform": "2",
+   "towards": "SAMAYPUR BADLI"
+  },
+  "dmrc:Chawri Bazar|yellow|dmrc:Chandni Chowk": {
+   "platform": "2",
+   "towards": "SAMAYPUR BADLI"
+  },
+  "dmrc:Chawri Bazar|yellow|dmrc:New Delhi": {
+   "platform": "1",
+   "towards": "MILLENNIUM CITY CENTRE GURUGRAM"
+  },
+  "dmrc:Chhatarpur|yellow|dmrc:Qutab Minar": {
+   "platform": "2",
+   "towards": "SAMAYPUR BADLI"
+  },
+  "dmrc:Chhatarpur|yellow|dmrc:Sultanpur": {
+   "platform": "1",
+   "towards": "MILLENNIUM CITY CENTRE GURUGRAM"
+  },
+  "dmrc:Chirag Delhi|magenta|dmrc:Greater Kailash": {
+   "platform": "1",
+   "towards": "BOTANICAL GARDEN"
+  },
+  "dmrc:Chirag Delhi|magenta|dmrc:Panchsheel Park": {
+   "platform": "2",
+   "towards": "KRISHNA PARK EXTENSION"
+  },
+  "dmrc:Civil Lines|yellow|dmrc:Kashmere Gate": {
+   "platform": "1",
+   "towards": "MILLENNIUM CITY CENTRE GURUGRAM"
+  },
+  "dmrc:Civil Lines|yellow|dmrc:Vidhan Sabha": {
+   "platform": "2",
+   "towards": "SAMAYPUR BADLI"
+  },
+  "dmrc:Dabri Mor - Janakpuri South|magenta|dmrc:Dashrath Puri": {
+   "platform": "1",
+   "towards": "BOTANICAL GARDEN"
+  },
+  "dmrc:Dabri Mor - Janakpuri South|magenta|dmrc:Janakpuri West": {
+   "platform": "2",
+   "towards": "KRISHNA PARK EXTENSION"
+  },
+  "dmrc:Dashrath Puri|magenta|dmrc:Dabri Mor - Janakpuri South": {
+   "platform": "2",
+   "towards": "KRISHNA PARK EXTENSION"
+  },
+  "dmrc:Dashrath Puri|magenta|dmrc:Palam": {
+   "platform": "1",
+   "towards": "BOTANICAL GARDEN"
+  },
+  "dmrc:Deepali Chowk|magenta|dmrc:Madhuban Chowk": {
+   "platform": "1",
+   "towards": "MAJLIS PARK"
+  },
+  "dmrc:Delhi Aerocity|airport|dmrc:Dhaula Kuan": {
+   "platform": "2",
+   "towards": "NEW DELHI (Yellow & Airport Line)"
+  },
+  "dmrc:Delhi Aerocity|airport|dmrc:IGI Airport": {
+   "platform": "1",
+   "towards": "YASHOBHOOMI DWARKA SECTOR  - 25"
+  },
+  "dmrc:Delhi Cantt|pink|dmrc:Durgabai Deshmukh South Campus": {
+   "platform": "1",
+   "towards": "MAUJPUR-BABARPUR"
+  },
+  "dmrc:Delhi Cantt|pink|dmrc:Naraina Vihar": {
+   "platform": "2",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:Delhi Gate|violet|dmrc:ITO": {
+   "platform": "1",
+   "towards": "RAJA NAHAR SINGH (BALLABHGARH)"
+  },
+  "dmrc:Delhi Gate|violet|dmrc:Jama Masjid": {
+   "platform": "2",
+   "towards": "KASHMERE GATE"
+  },
+  "dmrc:Dhansa Bus Stand|grey|dmrc:Najafgarh": {
+   "platform": "2",
+   "towards": "DWARKA-KAKROLA"
+  },
+  "dmrc:Dhaula Kuan|airport|dmrc:Delhi Aerocity": {
+   "platform": "1",
+   "towards": "YASHOBHOOMI DWARKA SECTOR  - 25"
+  },
+  "dmrc:Dhaula Kuan|airport|dmrc:Shivaji Stadium": {
+   "platform": "2",
+   "towards": "NEW DELHI (Yellow & Airport Line)"
+  },
+  "dmrc:Dilli Haat - INA|pink|dmrc:Sarojini Nagar": {
+   "platform": "4",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:Dilli Haat - INA|pink|dmrc:South Extension": {
+   "platform": "3",
+   "towards": "MAUJPUR-BABARPUR"
+  },
+  "dmrc:Dilli Haat - INA|yellow|dmrc:AIIMS": {
+   "platform": "1",
+   "towards": "MILLENNIUM CITY CENTRE GURUGRAM"
+  },
+  "dmrc:Dilli Haat - INA|yellow|dmrc:Jor Bagh": {
+   "platform": "2",
+   "towards": "SAMAYPUR BADLI"
+  },
+  "dmrc:Dilshad Garden|red|dmrc:Jhilmil": {
+   "platform": "1",
+   "towards": "RITHALA"
+  },
+  "dmrc:Dilshad Garden|red|dmrc:Shaheed Nagar": {
+   "platform": "2",
+   "towards": "SHAHEED STHAL ( NEW BUS ADDA)"
+  },
+  "dmrc:Durgabai Deshmukh South Campus|pink|dmrc:Delhi Cantt": {
+   "platform": "2",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:Durgabai Deshmukh South Campus|pink|dmrc:Sir M. Vishweshwaraiah Moti Bagh": {
+   "platform": "1",
+   "towards": "MAUJPUR-BABARPUR"
+  },
+  "dmrc:Dwarka Mor|blue|dmrc:Dwarka - Kakrola": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Dwarka Mor|blue|dmrc:Nawada": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Dwarka Sector 10|blue|dmrc:Dwarka Sector 11": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Dwarka Sector 10|blue|dmrc:Dwarka Sector 9": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Dwarka Sector 11|blue|dmrc:Dwarka Sector 10": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Dwarka Sector 11|blue|dmrc:Dwarka Sector 12": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Dwarka Sector 12|blue|dmrc:Dwarka Sector 11": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Dwarka Sector 12|blue|dmrc:Dwarka Sector 13": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Dwarka Sector 13|blue|dmrc:Dwarka Sector 12": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Dwarka Sector 13|blue|dmrc:Dwarka Sector 14": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Dwarka Sector 14|blue|dmrc:Dwarka - Kakrola": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Dwarka Sector 14|blue|dmrc:Dwarka Sector 13": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Dwarka Sector 21|airport|dmrc:IGI Airport": {
+   "platform": "4",
+   "towards": "NEW DELHI (Yellow & Airport Line)"
+  },
+  "dmrc:Dwarka Sector 21|airport|dmrc:Yashobhoomi Dwarka Sector 25": {
+   "platform": "2",
+   "towards": "YASHOBHOOMI DWARKA SECTOR  - 25"
+  },
+  "dmrc:Dwarka Sector 21|blue|dmrc:Dwarka Sector 8": {
+   "platform": "2",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Dwarka Sector 8|blue|dmrc:Dwarka Sector 21": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Dwarka Sector 8|blue|dmrc:Dwarka Sector 9": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Dwarka Sector 9|blue|dmrc:Dwarka Sector 10": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Dwarka Sector 9|blue|dmrc:Dwarka Sector 8": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:ESI - Basaidarapur|pink|dmrc:Punjabi Bagh West": {
+   "platform": "2",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:ESI - Basaidarapur|pink|dmrc:Rajouri Garden": {
+   "platform": "1",
+   "towards": "MAUJPUR-BABARPUR"
+  },
+  "dmrc:East Azad Nagar|pink|dmrc:Krishna Nagar": {
+   "platform": "2",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:East Azad Nagar|pink|dmrc:Welcome": {
+   "platform": "1",
+   "towards": "MAUJPUR-BABARPUR"
+  },
+  "dmrc:East Vinod Nagar - Mayur Vihar - II|pink|dmrc:Mandawali - West Vinod Nagar": {
+   "platform": "1",
+   "towards": "MAUJPUR-BABARPUR"
+  },
+  "dmrc:East Vinod Nagar - Mayur Vihar - II|pink|dmrc:Trilokpuri Sanjay Lake": {
+   "platform": "2",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:Escorts Mujesar|violet|dmrc:Bata Chowk": {
+   "platform": "2",
+   "towards": "KASHMERE GATE"
+  },
+  "dmrc:Escorts Mujesar|violet|dmrc:Sant Surdas (Sihi)": {
+   "platform": "1",
+   "towards": "RAJA NAHAR SINGH (BALLABHGARH)"
+  },
+  "dmrc:GTB Nagar|yellow|dmrc:Model Town": {
+   "platform": "2",
+   "towards": "SAMAYPUR BADLI"
+  },
+  "dmrc:GTB Nagar|yellow|dmrc:Vishwa Vidyalaya": {
+   "platform": "1",
+   "towards": "MILLENNIUM CITY CENTRE GURUGRAM"
+  },
+  "dmrc:Ghevra|green|dmrc:Mundka Industrial Area": {
+   "platform": "2",
+   "towards": "KIRTI NAGAR"
+  },
+  "dmrc:Ghevra|green|dmrc:Tikri Kalan": {
+   "platform": "1",
+   "towards": "BRIG. HOSHIAR SINGH"
+  },
+  "dmrc:Ghitorni|yellow|dmrc:Arjan Garh": {
+   "platform": "1",
+   "towards": "MILLENNIUM CITY CENTRE GURUGRAM"
+  },
+  "dmrc:Ghitorni|yellow|dmrc:Sultanpur": {
+   "platform": "2",
+   "towards": "SAMAYPUR BADLI"
+  },
+  "dmrc:Gokulpuri|pink|dmrc:Johri Enclave": {
+   "platform": "1",
+   "towards": "SHIV VIHAR"
+  },
+  "dmrc:Govind Puri|violet|dmrc:Harkesh Nagar Okhla": {
+   "platform": "1",
+   "towards": "RAJA NAHAR SINGH (BALLABHGARH)"
+  },
+  "dmrc:Govind Puri|violet|dmrc:Kalkaji Mandir": {
+   "platform": "2",
+   "towards": "KASHMERE GATE"
+  },
+  "dmrc:Greater Kailash|magenta|dmrc:Chirag Delhi": {
+   "platform": "2",
+   "towards": "KRISHNA PARK EXTENSION"
+  },
+  "dmrc:Greater Kailash|magenta|dmrc:Nehru Enclave": {
+   "platform": "1",
+   "towards": "BOTANICAL GARDEN"
+  },
+  "dmrc:Green Park|yellow|dmrc:AIIMS": {
+   "platform": "2",
+   "towards": "SAMAYPUR BADLI"
+  },
+  "dmrc:Green Park|yellow|dmrc:Hauz Khas": {
+   "platform": "1",
+   "towards": "MILLENNIUM CITY CENTRE GURUGRAM"
+  },
+  "dmrc:Guru Dronacharya|yellow|dmrc:Arjan Garh": {
+   "platform": "2",
+   "towards": "SAMAYPUR BADLI"
+  },
+  "dmrc:Guru Dronacharya|yellow|dmrc:Sikanderpur": {
+   "platform": "1",
+   "towards": "MILLENNIUM CITY CENTRE GURUGRAM"
+  },
+  "dmrc:Haiderpur Badli Mor|magenta|dmrc:Bhalaswa": {
+   "platform": "4",
+   "towards": "MAJLIS PARK"
+  },
+  "dmrc:Haiderpur Badli Mor|magenta|dmrc:Haiderpur Village": {
+   "platform": "3",
+   "towards": "DEEPALI CHOWK"
+  },
+  "dmrc:Haiderpur Badli Mor|yellow|dmrc:Jahangirpuri": {
+   "platform": "1",
+   "towards": "MILLENNIUM CITY CENTRE GURUGRAM"
+  },
+  "dmrc:Haiderpur Badli Mor|yellow|dmrc:Rohini Sector 18, 19": {
+   "platform": "2",
+   "towards": "SAMAYPUR BADLI"
+  },
+  "dmrc:Harkesh Nagar Okhla|violet|dmrc:Govind Puri": {
+   "platform": "2",
+   "towards": "KASHMERE GATE"
+  },
+  "dmrc:Harkesh Nagar Okhla|violet|dmrc:Jasola Apollo": {
+   "platform": "1",
+   "towards": "RAJA NAHAR SINGH (BALLABHGARH)"
+  },
+  "dmrc:Hauz Khas|magenta|dmrc:IIT Delhi": {
+   "platform": "4",
+   "towards": "KRISHNA PARK EXTENSION"
+  },
+  "dmrc:Hauz Khas|magenta|dmrc:Panchsheel Park": {
+   "platform": "3",
+   "towards": "BOTANICAL GARDEN"
+  },
+  "dmrc:Hauz Khas|yellow|dmrc:Green Park": {
+   "platform": "2",
+   "towards": "SAMAYPUR BADLI"
+  },
+  "dmrc:Hauz Khas|yellow|dmrc:Malviya Nagar": {
+   "platform": "1",
+   "towards": "MILLENNIUM CITY CENTRE GURUGRAM"
+  },
+  "dmrc:Hindon River|red|dmrc:Arthala": {
+   "platform": "1",
+   "towards": "RITHALA"
+  },
+  "dmrc:Hindon River|red|dmrc:Shaheed Sthal": {
+   "platform": "2",
+   "towards": "SHAHEED STHAL ( NEW BUS ADDA)"
+  },
+  "dmrc:IFFCO Chowk|yellow|dmrc:M G Road": {
+   "platform": "2",
+   "towards": "SAMAYPUR BADLI"
+  },
+  "dmrc:IFFCO Chowk|yellow|dmrc:Millennium City Centre Gurugram": {
+   "platform": "1",
+   "towards": "MILLENNIUM CITY CENTRE GURUGRAM"
+  },
+  "dmrc:IGI Airport|airport|dmrc:Delhi Aerocity": {
+   "platform": "3",
+   "towards": "NEW DELHI (Yellow & Airport Line)"
+  },
+  "dmrc:IGI Airport|airport|dmrc:Dwarka Sector 21": {
+   "platform": "2",
+   "towards": "YASHOBHOOMI DWARKA SECTOR  - 25"
+  },
+  "dmrc:IIT Delhi|magenta|dmrc:Hauz Khas": {
+   "platform": "1",
+   "towards": "BOTANICAL GARDEN"
+  },
+  "dmrc:IIT Delhi|magenta|dmrc:RK Puram": {
+   "platform": "2",
+   "towards": "KRISHNA PARK EXTENSION"
+  },
+  "dmrc:IP Extension|pink|dmrc:Anand Vihar": {
+   "platform": "1",
+   "towards": "MAUJPUR-BABARPUR"
+  },
+  "dmrc:IP Extension|pink|dmrc:Mandawali - West Vinod Nagar": {
+   "platform": "2",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:ITO|violet|dmrc:Delhi Gate": {
+   "platform": "2",
+   "towards": "KASHMERE GATE"
+  },
+  "dmrc:ITO|violet|dmrc:Mandi House": {
+   "platform": "1",
+   "towards": "RAJA NAHAR SINGH (BALLABHGARH)"
+  },
+  "dmrc:Inderlok|green|dmrc:Ashok Park Main": {
+   "platform": "4",
+   "towards": "BRIG. HOSHIAR SINGH"
+  },
+  "dmrc:Inderlok|red|dmrc:Kanhaiya Nagar": {
+   "platform": "1",
+   "towards": "RITHALA"
+  },
+  "dmrc:Inderlok|red|dmrc:Shastri Nagar": {
+   "platform": "2",
+   "towards": "SHAHEED STHAL ( NEW BUS ADDA)"
+  },
+  "dmrc:Indraprastha|blue|dmrc:Supreme Court": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Indraprastha|blue|dmrc:Yamuna Bank": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Jaffrabad|pink|dmrc:Maujpur - Babarpur": {
+   "platform": "1",
+   "towards": "MAUJPUR-BABARPUR"
+  },
+  "dmrc:Jaffrabad|pink|dmrc:Welcome": {
+   "platform": "2",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:Jahangirpuri|yellow|dmrc:Adarsh Nagar": {
+   "platform": "1",
+   "towards": "MILLENNIUM CITY CENTRE GURUGRAM"
+  },
+  "dmrc:Jahangirpuri|yellow|dmrc:Haiderpur Badli Mor": {
+   "platform": "2",
+   "towards": "SAMAYPUR BADLI"
+  },
+  "dmrc:Jama Masjid|violet|dmrc:Delhi Gate": {
+   "platform": "1",
+   "towards": "RAJA NAHAR SINGH (BALLABHGARH)"
+  },
+  "dmrc:Jama Masjid|violet|dmrc:Lal Quila": {
+   "platform": "2",
+   "towards": "KASHMERE GATE"
+  },
+  "dmrc:Jamia Millia Islamia|magenta|dmrc:Okhla Vihar": {
+   "platform": "1",
+   "towards": "BOTANICAL GARDEN"
+  },
+  "dmrc:Jamia Millia Islamia|magenta|dmrc:Sukhdev Vihar": {
+   "platform": "2",
+   "towards": "KRISHNA PARK EXTENSION"
+  },
+  "dmrc:Janakpuri East|blue|dmrc:Janakpuri West": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Janakpuri East|blue|dmrc:Tilak Nagar": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Janakpuri West|blue|dmrc:Janakpuri East": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Janakpuri West|blue|dmrc:Uttam Nagar East": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Janakpuri West|magenta|dmrc:Dabri Mor - Janakpuri South": {
+   "platform": "4",
+   "towards": "BOTANICAL GARDEN"
+  },
+  "dmrc:Janakpuri West|magenta|dmrc:Krishna Park Extension": {
+   "platform": "3",
+   "towards": "KRISHNA PARK EXTENSION"
+  },
+  "dmrc:Jangpura|violet|dmrc:Jawaharlal Nehru Stadium": {
+   "platform": "2",
+   "towards": "KASHMERE GATE"
+  },
+  "dmrc:Jangpura|violet|dmrc:Lajpat Nagar": {
+   "platform": "1",
+   "towards": "RAJA NAHAR SINGH (BALLABHGARH)"
+  },
+  "dmrc:Janpath|violet|dmrc:Central Secretariat": {
+   "platform": "1",
+   "towards": "RAJA NAHAR SINGH (BALLABHGARH)"
+  },
+  "dmrc:Janpath|violet|dmrc:Mandi House": {
+   "platform": "2",
+   "towards": "KASHMERE GATE"
+  },
+  "dmrc:Jasola Apollo|violet|dmrc:Harkesh Nagar Okhla": {
+   "platform": "2",
+   "towards": "KASHMERE GATE"
+  },
+  "dmrc:Jasola Apollo|violet|dmrc:Sarita Vihar": {
+   "platform": "1",
+   "towards": "RAJA NAHAR SINGH (BALLABHGARH)"
+  },
+  "dmrc:Jasola Vihar Shaheen Bagh|magenta|dmrc:Kalindi Kunj": {
+   "platform": "3",
+   "towards": "BOTANICAL GARDEN"
+  },
+  "dmrc:Jasola Vihar Shaheen Bagh|magenta|dmrc:Okhla Vihar": {
+   "platform": "2",
+   "towards": "KRISHNA PARK EXTENSION"
+  },
+  "dmrc:Jawaharlal Nehru Stadium|violet|dmrc:Jangpura": {
+   "platform": "1",
+   "towards": "RAJA NAHAR SINGH (BALLABHGARH)"
+  },
+  "dmrc:Jawaharlal Nehru Stadium|violet|dmrc:Khan Market": {
+   "platform": "2",
+   "towards": "KASHMERE GATE"
+  },
+  "dmrc:Jhandewalan|blue|dmrc:Karol Bagh": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Jhandewalan|blue|dmrc:Ramakrishna Ashram Marg": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Jharoda Majra|pink|dmrc:Burari": {
+   "platform": "2",
+   "towards": "MAUJPUR-BABARPUR"
+  },
+  "dmrc:Jharoda Majra|pink|dmrc:Jagatpur - Wazirabad": {
+   "platform": "1",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:Jhilmil|red|dmrc:Dilshad Garden": {
+   "platform": "2",
+   "towards": "SHAHEED STHAL ( NEW BUS ADDA)"
+  },
+  "dmrc:Jhilmil|red|dmrc:Mansarovar Park": {
+   "platform": "1",
+   "towards": "RITHALA"
+  },
+  "dmrc:Johri Enclave|pink|dmrc:Shiv Vihar": {
+   "platform": "1",
+   "towards": "SHIV VIHAR"
+  },
+  "dmrc:Jor Bagh|yellow|dmrc:Dilli Haat - INA": {
+   "platform": "1",
+   "towards": "MILLENNIUM CITY CENTRE GURUGRAM"
+  },
+  "dmrc:Jor Bagh|yellow|dmrc:Lok Kalyan Marg": {
+   "platform": "2",
+   "towards": "SAMAYPUR BADLI"
+  },
+  "dmrc:Kailash Colony|violet|dmrc:Moolchand": {
+   "platform": "2",
+   "towards": "KASHMERE GATE"
+  },
+  "dmrc:Kailash Colony|violet|dmrc:Nehru Place": {
+   "platform": "1",
+   "towards": "RAJA NAHAR SINGH (BALLABHGARH)"
+  },
+  "dmrc:Kalindi Kunj|magenta|dmrc:Jasola Vihar Shaheen Bagh": {
+   "platform": "2",
+   "towards": "KRISHNA PARK EXTENSION"
+  },
+  "dmrc:Kalindi Kunj|magenta|dmrc:Okhla Bird Sanctuary": {
+   "platform": "1",
+   "towards": "BOTANICAL GARDEN"
+  },
+  "dmrc:Kalkaji Mandir|magenta|dmrc:Nehru Enclave": {
+   "platform": "4",
+   "towards": "KRISHNA PARK EXTENSION"
+  },
+  "dmrc:Kalkaji Mandir|magenta|dmrc:Okhla NSIC": {
+   "platform": "3",
+   "towards": "BOTANICAL GARDEN"
+  },
+  "dmrc:Kalkaji Mandir|violet|dmrc:Govind Puri": {
+   "platform": "1",
+   "towards": "RAJA NAHAR SINGH (BALLABHGARH)"
+  },
+  "dmrc:Kalkaji Mandir|violet|dmrc:Nehru Place": {
+   "platform": "2",
+   "towards": "KASHMERE GATE"
+  },
+  "dmrc:Kanhaiya Nagar|red|dmrc:Inderlok": {
+   "platform": "2",
+   "towards": "SHAHEED STHAL ( NEW BUS ADDA)"
+  },
+  "dmrc:Kanhaiya Nagar|red|dmrc:Keshav Puram": {
+   "platform": "1",
+   "towards": "RITHALA"
+  },
+  "dmrc:Karkarduma Court|pink|dmrc:Karkarduma": {
+   "platform": "2",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:Karkarduma Court|pink|dmrc:Krishna Nagar": {
+   "platform": "1",
+   "towards": "MAUJPUR-BABARPUR"
+  },
+  "dmrc:Karkarduma|blue|dmrc:Anand Vihar": {
+   "platform": "1",
+   "towards": "VAISHALI"
+  },
+  "dmrc:Karkarduma|blue|dmrc:Preet Vihar": {
+   "platform": "2",
+   "towards": "YAMUNA BANK"
+  },
+  "dmrc:Karkarduma|pink|dmrc:Anand Vihar": {
+   "platform": "4",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:Karol Bagh|blue|dmrc:Jhandewalan": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Karol Bagh|blue|dmrc:Rajendra Place": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Kashmere Gate|red|dmrc:Shastri Park": {
+   "platform": "4",
+   "towards": "SHAHEED STHAL ( NEW BUS ADDA)"
+  },
+  "dmrc:Kashmere Gate|red|dmrc:Tis Hazari": {
+   "platform": "3",
+   "towards": "RITHALA"
+  },
+  "dmrc:Kashmere Gate|violet|dmrc:Lal Quila": {
+   "platform": "5",
+   "towards": "RAJA NAHAR SINGH (BALLABHGARH)"
+  },
+  "dmrc:Kashmere Gate|yellow|dmrc:Chandni Chowk": {
+   "platform": "1",
+   "towards": "MILLENNIUM CITY CENTRE GURUGRAM"
+  },
+  "dmrc:Kashmere Gate|yellow|dmrc:Civil Lines": {
+   "platform": "2",
+   "towards": "SAMAYPUR BADLI"
+  },
+  "dmrc:Kaushambi|blue|dmrc:Anand Vihar": {
+   "platform": "2",
+   "towards": "YAMUNA BANK"
+  },
+  "dmrc:Kaushambi|blue|dmrc:Vaishali": {
+   "platform": "1",
+   "towards": "VAISHALI"
+  },
+  "dmrc:Keshav Puram|red|dmrc:Kanhaiya Nagar": {
+   "platform": "2",
+   "towards": "SHAHEED STHAL ( NEW BUS ADDA)"
+  },
+  "dmrc:Keshav Puram|red|dmrc:Netaji Subhash Place": {
+   "platform": "1",
+   "towards": "RITHALA"
+  },
+  "dmrc:Khajuri Khas|pink|dmrc:Bhajanpura": {
+   "platform": "1",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:Khajuri Khas|pink|dmrc:Nanaksar - Sonia Vihar": {
+   "platform": "2",
+   "towards": "MAUJPUR-BABARPUR"
+  },
+  "dmrc:Khan Market|violet|dmrc:Central Secretariat": {
+   "platform": "2",
+   "towards": "KASHMERE GATE"
+  },
+  "dmrc:Khan Market|violet|dmrc:Jawaharlal Nehru Stadium": {
+   "platform": "1",
+   "towards": "RAJA NAHAR SINGH (BALLABHGARH)"
+  },
+  "dmrc:Kirti Nagar|blue|dmrc:Moti Nagar": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Kirti Nagar|blue|dmrc:Shadipur": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Kirti Nagar|green|dmrc:Satguru Ramsingh Marg": {
+   "platform": "3",
+   "towards": "BRIG. HOSHIAR SINGH"
+  },
+  "dmrc:Kohat Enclave|red|dmrc:Madhuban Chowk": {
+   "platform": "1",
+   "towards": "RITHALA"
+  },
+  "dmrc:Kohat Enclave|red|dmrc:Netaji Subhash Place": {
+   "platform": "2",
+   "towards": "SHAHEED STHAL ( NEW BUS ADDA)"
+  },
+  "dmrc:Krishna Nagar|pink|dmrc:East Azad Nagar": {
+   "platform": "1",
+   "towards": "MAUJPUR-BABARPUR"
+  },
+  "dmrc:Krishna Nagar|pink|dmrc:Karkarduma Court": {
+   "platform": "2",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:Krishna Park Extension|magenta|dmrc:Janakpuri West": {
+   "platform": "1",
+   "towards": "BOTANICAL GARDEN"
+  },
+  "dmrc:Lajpat Nagar|pink|dmrc:South Extension": {
+   "platform": "4",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:Lajpat Nagar|violet|dmrc:Jangpura": {
+   "platform": "2",
+   "towards": "KASHMERE GATE"
+  },
+  "dmrc:Lajpat Nagar|violet|dmrc:Moolchand": {
+   "platform": "1",
+   "towards": "RAJA NAHAR SINGH (BALLABHGARH)"
+  },
+  "dmrc:Lal Quila|violet|dmrc:Jama Masjid": {
+   "platform": "1",
+   "towards": "RAJA NAHAR SINGH (BALLABHGARH)"
+  },
+  "dmrc:Lal Quila|violet|dmrc:Kashmere Gate": {
+   "platform": "2",
+   "towards": "KASHMERE GATE"
+  },
+  "dmrc:Laxmi Nagar|blue|dmrc:Nirman Vihar": {
+   "platform": "1",
+   "towards": "VAISHALI"
+  },
+  "dmrc:Lok Kalyan Marg|yellow|dmrc:Jor Bagh": {
+   "platform": "1",
+   "towards": "MILLENNIUM CITY CENTRE GURUGRAM"
+  },
+  "dmrc:Lok Kalyan Marg|yellow|dmrc:Seva Teerth": {
+   "platform": "2",
+   "towards": "SAMAYPUR BADLI"
+  },
+  "dmrc:M G Road|yellow|dmrc:IFFCO Chowk": {
+   "platform": "1",
+   "towards": "MILLENNIUM CITY CENTRE GURUGRAM"
+  },
+  "dmrc:M G Road|yellow|dmrc:Sikanderpur": {
+   "platform": "2",
+   "towards": "SAMAYPUR BADLI"
+  },
+  "dmrc:Madhuban Chowk|magenta|dmrc:Deepali Chowk": {
+   "platform": "3",
+   "towards": "DEEPALI CHOWK"
+  },
+  "dmrc:Madhuban Chowk|magenta|dmrc:North Pitampura - Prashant Vihar": {
+   "platform": "4",
+   "towards": "MAJLIS PARK"
+  },
+  "dmrc:Madipur|green|dmrc:Paschim Vihar East": {
+   "platform": "1",
+   "towards": "BRIG. HOSHIAR SINGH"
+  },
+  "dmrc:Madipur|green|dmrc:Shivaji Park": {
+   "platform": "2",
+   "towards": "KIRTI NAGAR"
+  },
+  "dmrc:Majlis Park|magenta|dmrc:Bhalaswa": {
+   "platform": "3",
+   "towards": "DEEPALI CHOWK"
+  },
+  "dmrc:Majlis Park|pink|dmrc:Azadpur": {
+   "platform": "1",
+   "towards": "MAUJPUR-BABARPUR"
+  },
+  "dmrc:Majlis Park|pink|dmrc:Burari": {
+   "platform": "2",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:Malviya Nagar|yellow|dmrc:Hauz Khas": {
+   "platform": "2",
+   "towards": "SAMAYPUR BADLI"
+  },
+  "dmrc:Malviya Nagar|yellow|dmrc:Saket": {
+   "platform": "1",
+   "towards": "MILLENNIUM CITY CENTRE GURUGRAM"
+  },
+  "dmrc:Mandawali - West Vinod Nagar|pink|dmrc:East Vinod Nagar - Mayur Vihar - II": {
+   "platform": "2",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:Mandawali - West Vinod Nagar|pink|dmrc:IP Extension": {
+   "platform": "1",
+   "towards": "MAUJPUR-BABARPUR"
+  },
+  "dmrc:Mandi House|blue|dmrc:Barakhambha Road": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Mandi House|blue|dmrc:Supreme Court": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Mandi House|violet|dmrc:ITO": {
+   "platform": "4",
+   "towards": "KASHMERE GATE"
+  },
+  "dmrc:Mandi House|violet|dmrc:Janpath": {
+   "platform": "3",
+   "towards": "RAJA NAHAR SINGH (BALLABHGARH)"
+  },
+  "dmrc:Mansarovar Park|red|dmrc:Jhilmil": {
+   "platform": "2",
+   "towards": "SHAHEED STHAL ( NEW BUS ADDA)"
+  },
+  "dmrc:Mansarovar Park|red|dmrc:Shahdara": {
+   "platform": "1",
+   "towards": "RITHALA"
+  },
+  "dmrc:Maujpur - Babarpur|pink|dmrc:Gokulpuri": {
+   "platform": "3",
+   "towards": "SHIV VIHAR"
+  },
+  "dmrc:Mayapuri|pink|dmrc:Naraina Vihar": {
+   "platform": "1",
+   "towards": "MAUJPUR-BABARPUR"
+  },
+  "dmrc:Mayapuri|pink|dmrc:Rajouri Garden": {
+   "platform": "2",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:Mayur Vihar - I|blue|dmrc:Akshardham": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Mayur Vihar - I|blue|dmrc:Mayur Vihar Extension": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Mayur Vihar - I|pink|dmrc:Sarai Kale Khan - Nizamuddin": {
+   "platform": "4",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:Mayur Vihar Extension|blue|dmrc:Mayur Vihar - I": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Mayur Vihar Extension|blue|dmrc:New Ashok Nagar": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Mewala Maharajpur|violet|dmrc:NHPC Chowk": {
+   "platform": "2",
+   "towards": "KASHMERE GATE"
+  },
+  "dmrc:Mewala Maharajpur|violet|dmrc:Sector 28": {
+   "platform": "1",
+   "towards": "RAJA NAHAR SINGH (BALLABHGARH)"
+  },
+  "dmrc:Millennium City Centre Gurugram|yellow|dmrc:IFFCO Chowk": {
+   "platform": "2",
+   "towards": "SAMAYPUR BADLI"
+  },
+  "dmrc:Model Town|yellow|dmrc:Azadpur": {
+   "platform": "2",
+   "towards": "SAMAYPUR BADLI"
+  },
+  "dmrc:Model Town|yellow|dmrc:GTB Nagar": {
+   "platform": "1",
+   "towards": "MILLENNIUM CITY CENTRE GURUGRAM"
+  },
+  "dmrc:Mohan Estate|violet|dmrc:Sarita Vihar": {
+   "platform": "2",
+   "towards": "KASHMERE GATE"
+  },
+  "dmrc:Mohan Estate|violet|dmrc:Tughlakabad": {
+   "platform": "1",
+   "towards": "RAJA NAHAR SINGH (BALLABHGARH)"
+  },
+  "dmrc:Mohan Nagar|red|dmrc:Arthala": {
+   "platform": "2",
+   "towards": "SHAHEED STHAL ( NEW BUS ADDA)"
+  },
+  "dmrc:Mohan Nagar|red|dmrc:Shyam Park": {
+   "platform": "1",
+   "towards": "RITHALA"
+  },
+  "dmrc:Moolchand|violet|dmrc:Kailash Colony": {
+   "platform": "1",
+   "towards": "RAJA NAHAR SINGH (BALLABHGARH)"
+  },
+  "dmrc:Moolchand|violet|dmrc:Lajpat Nagar": {
+   "platform": "2",
+   "towards": "KASHMERE GATE"
+  },
+  "dmrc:Moti Nagar|blue|dmrc:Kirti Nagar": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Moti Nagar|blue|dmrc:Ramesh Nagar": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Mundka Industrial Area|green|dmrc:Ghevra": {
+   "platform": "1",
+   "towards": "BRIG. HOSHIAR SINGH"
+  },
+  "dmrc:Mundka Industrial Area|green|dmrc:Mundka": {
+   "platform": "2",
+   "towards": "KIRTI NAGAR"
+  },
+  "dmrc:Mundka|green|dmrc:Mundka Industrial Area": {
+   "platform": "1",
+   "towards": "BRIG. HOSHIAR SINGH"
+  },
+  "dmrc:Mundka|green|dmrc:Rajdhani Park": {
+   "platform": "3",
+   "towards": "KIRTI NAGAR"
+  },
+  "dmrc:Munirka|magenta|dmrc:RK Puram": {
+   "platform": "1",
+   "towards": "BOTANICAL GARDEN"
+  },
+  "dmrc:Munirka|magenta|dmrc:Vasant Vihar": {
+   "platform": "2",
+   "towards": "KRISHNA PARK EXTENSION"
+  },
+  "dmrc:NHPC Chowk|violet|dmrc:Mewala Maharajpur": {
+   "platform": "1",
+   "towards": "RAJA NAHAR SINGH (BALLABHGARH)"
+  },
+  "dmrc:NHPC Chowk|violet|dmrc:Sarai": {
+   "platform": "2",
+   "towards": "KASHMERE GATE"
+  },
+  "dmrc:Najafgarh|grey|dmrc:Dhansa Bus Stand": {
+   "platform": "1",
+   "towards": "DHANSA BUS STAND"
+  },
+  "dmrc:Najafgarh|grey|dmrc:Nangli": {
+   "platform": "2",
+   "towards": "DWARKA-KAKROLA"
+  },
+  "dmrc:Nanaksar - Sonia Vihar|pink|dmrc:Khajuri Khas": {
+   "platform": "1",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:Nanaksar - Sonia Vihar|pink|dmrc:Soorghat": {
+   "platform": "2",
+   "towards": "MAUJPUR-BABARPUR"
+  },
+  "dmrc:Nangli|grey|dmrc:Dwarka - Kakrola": {
+   "platform": "2",
+   "towards": "DWARKA-KAKROLA"
+  },
+  "dmrc:Nangli|grey|dmrc:Najafgarh": {
+   "platform": "1",
+   "towards": "DHANSA BUS STAND"
+  },
+  "dmrc:Nangloi Railway Station|green|dmrc:Nangloi": {
+   "platform": "2",
+   "towards": "KIRTI NAGAR"
+  },
+  "dmrc:Nangloi Railway Station|green|dmrc:Rajdhani Park": {
+   "platform": "1",
+   "towards": "BRIG. HOSHIAR SINGH"
+  },
+  "dmrc:Nangloi|green|dmrc:Nangloi Railway Station": {
+   "platform": "1",
+   "towards": "BRIG. HOSHIAR SINGH"
+  },
+  "dmrc:Nangloi|green|dmrc:Surajmal Stadium": {
+   "platform": "2",
+   "towards": "KIRTI NAGAR"
+  },
+  "dmrc:Naraina Vihar|pink|dmrc:Delhi Cantt": {
+   "platform": "1",
+   "towards": "MAUJPUR-BABARPUR"
+  },
+  "dmrc:Naraina Vihar|pink|dmrc:Mayapuri": {
+   "platform": "2",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:Nawada|blue|dmrc:Dwarka Mor": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Nawada|blue|dmrc:Uttam Nagar West": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Neelam Chowk Ajronda|violet|dmrc:Bata Chowk": {
+   "platform": "1",
+   "towards": "RAJA NAHAR SINGH (BALLABHGARH)"
+  },
+  "dmrc:Neelam Chowk Ajronda|violet|dmrc:Old Faridabad": {
+   "platform": "2",
+   "towards": "KASHMERE GATE"
+  },
+  "dmrc:Nehru Enclave|magenta|dmrc:Greater Kailash": {
+   "platform": "2",
+   "towards": "KRISHNA PARK EXTENSION"
+  },
+  "dmrc:Nehru Enclave|magenta|dmrc:Kalkaji Mandir": {
+   "platform": "1",
+   "towards": "BOTANICAL GARDEN"
+  },
+  "dmrc:Nehru Place|violet|dmrc:Kailash Colony": {
+   "platform": "2",
+   "towards": "KASHMERE GATE"
+  },
+  "dmrc:Nehru Place|violet|dmrc:Kalkaji Mandir": {
+   "platform": "1",
+   "towards": "RAJA NAHAR SINGH (BALLABHGARH)"
+  },
+  "dmrc:Netaji Subhash Place|pink|dmrc:Shakurpur": {
+   "platform": "3",
+   "towards": "MAUJPUR-BABARPUR"
+  },
+  "dmrc:Netaji Subhash Place|pink|dmrc:Shalimar Bagh": {
+   "platform": "4",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:Netaji Subhash Place|red|dmrc:Keshav Puram": {
+   "platform": "2",
+   "towards": "SHAHEED STHAL ( NEW BUS ADDA)"
+  },
+  "dmrc:Netaji Subhash Place|red|dmrc:Kohat Enclave": {
+   "platform": "1",
+   "towards": "RITHALA"
+  },
+  "dmrc:New Ashok Nagar|blue|dmrc:Mayur Vihar Extension": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:New Ashok Nagar|blue|dmrc:Noida Sector 15": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:New Delhi|airport|dmrc:Shivaji Stadium": {
+   "platform": "4",
+   "towards": "YASHOBHOOMI DWARKA SECTOR  - 25"
+  },
+  "dmrc:New Delhi|yellow|dmrc:Chawri Bazar": {
+   "platform": "2",
+   "towards": "SAMAYPUR BADLI"
+  },
+  "dmrc:New Delhi|yellow|dmrc:Rajiv Chowk": {
+   "platform": "1",
+   "towards": "MILLENNIUM CITY CENTRE GURUGRAM"
+  },
+  "dmrc:Nirman Vihar|blue|dmrc:Laxmi Nagar": {
+   "platform": "2",
+   "towards": "YAMUNA BANK"
+  },
+  "dmrc:Nirman Vihar|blue|dmrc:Preet Vihar": {
+   "platform": "1",
+   "towards": "VAISHALI"
+  },
+  "dmrc:Noida City Centre|blue|dmrc:Noida Golf Course": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Noida City Centre|blue|dmrc:Noida Sector 34": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Noida Electronic City|blue|dmrc:Noida Sector 62": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Noida Golf Course|blue|dmrc:Botanical Garden": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Noida Golf Course|blue|dmrc:Noida City Centre": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Noida Sector 15|blue|dmrc:New Ashok Nagar": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Noida Sector 15|blue|dmrc:Noida Sector 16": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Noida Sector 16|blue|dmrc:Noida Sector 15": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Noida Sector 16|blue|dmrc:Noida Sector 18": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Noida Sector 18|blue|dmrc:Botanical Garden": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Noida Sector 18|blue|dmrc:Noida Sector 16": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Noida Sector 34|blue|dmrc:Noida City Centre": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Noida Sector 34|blue|dmrc:Noida Sector 52": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Noida Sector 52|blue|dmrc:Noida Sector 34": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Noida Sector 52|blue|dmrc:Noida Sector 61": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Noida Sector 59|blue|dmrc:Noida Sector 61": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Noida Sector 59|blue|dmrc:Noida Sector 62": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Noida Sector 61|blue|dmrc:Noida Sector 52": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Noida Sector 61|blue|dmrc:Noida Sector 59": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Noida Sector 62|blue|dmrc:Noida Electronic City": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Noida Sector 62|blue|dmrc:Noida Sector 59": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Okhla Bird Sanctuary|magenta|dmrc:Botanical Garden": {
+   "platform": "1",
+   "towards": "BOTANICAL GARDEN"
+  },
+  "dmrc:Okhla Bird Sanctuary|magenta|dmrc:Kalindi Kunj": {
+   "platform": "2",
+   "towards": "KRISHNA PARK EXTENSION"
+  },
+  "dmrc:Okhla NSIC|magenta|dmrc:Kalkaji Mandir": {
+   "platform": "2",
+   "towards": "KRISHNA PARK EXTENSION"
+  },
+  "dmrc:Okhla NSIC|magenta|dmrc:Sukhdev Vihar": {
+   "platform": "1",
+   "towards": "BOTANICAL GARDEN"
+  },
+  "dmrc:Okhla Vihar|magenta|dmrc:Jamia Millia Islamia": {
+   "platform": "2",
+   "towards": "KRISHNA PARK EXTENSION"
+  },
+  "dmrc:Okhla Vihar|magenta|dmrc:Jasola Vihar Shaheen Bagh": {
+   "platform": "1",
+   "towards": "BOTANICAL GARDEN"
+  },
+  "dmrc:Old Faridabad|violet|dmrc:Badhkal Mor": {
+   "platform": "2",
+   "towards": "KASHMERE GATE"
+  },
+  "dmrc:Old Faridabad|violet|dmrc:Neelam Chowk Ajronda": {
+   "platform": "1",
+   "towards": "RAJA NAHAR SINGH (BALLABHGARH)"
+  },
+  "dmrc:Palam|magenta|dmrc:Dashrath Puri": {
+   "platform": "2",
+   "towards": "KRISHNA PARK EXTENSION"
+  },
+  "dmrc:Palam|magenta|dmrc:Sadar Bazar Cantonment": {
+   "platform": "1",
+   "towards": "BOTANICAL GARDEN"
+  },
+  "dmrc:Panchsheel Park|magenta|dmrc:Chirag Delhi": {
+   "platform": "1",
+   "towards": "BOTANICAL GARDEN"
+  },
+  "dmrc:Panchsheel Park|magenta|dmrc:Hauz Khas": {
+   "platform": "2",
+   "towards": "KRISHNA PARK EXTENSION"
+  },
+  "dmrc:Pandit Shree Ram Sharma|green|dmrc:Bahadurgarh City": {
+   "platform": "1",
+   "towards": "BRIG. HOSHIAR SINGH"
+  },
+  "dmrc:Pandit Shree Ram Sharma|green|dmrc:Tikri Border": {
+   "platform": "2",
+   "towards": "KIRTI NAGAR"
+  },
+  "dmrc:Paschim Vihar East|green|dmrc:Madipur": {
+   "platform": "2",
+   "towards": "KIRTI NAGAR"
+  },
+  "dmrc:Paschim Vihar East|green|dmrc:Paschim Vihar West": {
+   "platform": "1",
+   "towards": "BRIG. HOSHIAR SINGH"
+  },
+  "dmrc:Paschim Vihar West|green|dmrc:Paschim Vihar East": {
+   "platform": "2",
+   "towards": "KIRTI NAGAR"
+  },
+  "dmrc:Paschim Vihar West|green|dmrc:Peeragarhi": {
+   "platform": "1",
+   "towards": "BRIG. HOSHIAR SINGH"
+  },
+  "dmrc:Patel Chowk|yellow|dmrc:Central Secretariat": {
+   "platform": "1",
+   "towards": "MILLENNIUM CITY CENTRE GURUGRAM"
+  },
+  "dmrc:Patel Chowk|yellow|dmrc:Rajiv Chowk": {
+   "platform": "2",
+   "towards": "SAMAYPUR BADLI"
+  },
+  "dmrc:Patel Nagar|blue|dmrc:Rajendra Place": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Patel Nagar|blue|dmrc:Shadipur": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Peeragarhi|green|dmrc:Paschim Vihar West": {
+   "platform": "2",
+   "towards": "KIRTI NAGAR"
+  },
+  "dmrc:Peeragarhi|green|dmrc:Udyog Nagar": {
+   "platform": "1",
+   "towards": "BRIG. HOSHIAR SINGH"
+  },
+  "dmrc:Pratap Nagar|red|dmrc:Pul Bangash": {
+   "platform": "2",
+   "towards": "SHAHEED STHAL ( NEW BUS ADDA)"
+  },
+  "dmrc:Pratap Nagar|red|dmrc:Shastri Nagar": {
+   "platform": "1",
+   "towards": "RITHALA"
+  },
+  "dmrc:Preet Vihar|blue|dmrc:Karkarduma": {
+   "platform": "1",
+   "towards": "VAISHALI"
+  },
+  "dmrc:Pul Bangash|red|dmrc:Pratap Nagar": {
+   "platform": "1",
+   "towards": "RITHALA"
+  },
+  "dmrc:Pul Bangash|red|dmrc:Tis Hazari": {
+   "platform": "2",
+   "towards": "SHAHEED STHAL ( NEW BUS ADDA)"
+  },
+  "dmrc:Punjabi Bagh West|green|dmrc:Punjabi Bagh": {
+   "platform": "4",
+   "towards": "KIRTI NAGAR"
+  },
+  "dmrc:Punjabi Bagh West|green|dmrc:Shivaji Park": {
+   "platform": "3",
+   "towards": "BRIG. HOSHIAR SINGH"
+  },
+  "dmrc:Punjabi Bagh West|pink|dmrc:ESI - Basaidarapur": {
+   "platform": "1",
+   "towards": "MAUJPUR-BABARPUR"
+  },
+  "dmrc:Punjabi Bagh West|pink|dmrc:Shakurpur": {
+   "platform": "2",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:Punjabi Bagh|green|dmrc:Ashok Park Main": {
+   "platform": "2",
+   "towards": "KIRTI NAGAR"
+  },
+  "dmrc:Punjabi Bagh|green|dmrc:Punjabi Bagh West": {
+   "platform": "1",
+   "towards": "BRIG. HOSHIAR SINGH"
+  },
+  "dmrc:Qutab Minar|yellow|dmrc:Chhatarpur": {
+   "platform": "1",
+   "towards": "MILLENNIUM CITY CENTRE GURUGRAM"
+  },
+  "dmrc:Qutab Minar|yellow|dmrc:Saket": {
+   "platform": "2",
+   "towards": "SAMAYPUR BADLI"
+  },
+  "dmrc:RK Puram|magenta|dmrc:IIT Delhi": {
+   "platform": "1",
+   "towards": "BOTANICAL GARDEN"
+  },
+  "dmrc:RK Puram|magenta|dmrc:Munirka": {
+   "platform": "2",
+   "towards": "KRISHNA PARK EXTENSION"
+  },
+  "dmrc:Raj Bagh|red|dmrc:Rajendra Nagar": {
+   "platform": "2",
+   "towards": "SHAHEED STHAL ( NEW BUS ADDA)"
+  },
+  "dmrc:Raj Bagh|red|dmrc:Shaheed Nagar": {
+   "platform": "1",
+   "towards": "RITHALA"
+  },
+  "dmrc:Raja Nahar Singh|violet|dmrc:Sant Surdas (Sihi)": {
+   "platform": "2",
+   "towards": "KASHMERE GATE"
+  },
+  "dmrc:Rajdhani Park|green|dmrc:Mundka": {
+   "platform": "1",
+   "towards": "BRIG. HOSHIAR SINGH"
+  },
+  "dmrc:Rajdhani Park|green|dmrc:Nangloi Railway Station": {
+   "platform": "2",
+   "towards": "KIRTI NAGAR"
+  },
+  "dmrc:Rajendra Nagar|red|dmrc:Raj Bagh": {
+   "platform": "1",
+   "towards": "RITHALA"
+  },
+  "dmrc:Rajendra Nagar|red|dmrc:Shyam Park": {
+   "platform": "2",
+   "towards": "SHAHEED STHAL ( NEW BUS ADDA)"
+  },
+  "dmrc:Rajendra Place|blue|dmrc:Karol Bagh": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Rajendra Place|blue|dmrc:Patel Nagar": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Rajiv Chowk|blue|dmrc:Barakhambha Road": {
+   "platform": "3",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Rajiv Chowk|blue|dmrc:Ramakrishna Ashram Marg": {
+   "platform": "4",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Rajiv Chowk|yellow|dmrc:New Delhi": {
+   "platform": "2",
+   "towards": "SAMAYPUR BADLI"
+  },
+  "dmrc:Rajiv Chowk|yellow|dmrc:Patel Chowk": {
+   "platform": "1",
+   "towards": "MILLENNIUM CITY CENTRE GURUGRAM"
+  },
+  "dmrc:Rajouri Garden|blue|dmrc:Ramesh Nagar": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Rajouri Garden|blue|dmrc:Tagore Garden": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Rajouri Garden|pink|dmrc:ESI - Basaidarapur": {
+   "platform": "4",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:Rajouri Garden|pink|dmrc:Mayapuri": {
+   "platform": "3",
+   "towards": "MAUJPUR-BABARPUR"
+  },
+  "dmrc:Ramakrishna Ashram Marg|blue|dmrc:Jhandewalan": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Ramakrishna Ashram Marg|blue|dmrc:Rajiv Chowk": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Ramesh Nagar|blue|dmrc:Moti Nagar": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Ramesh Nagar|blue|dmrc:Rajouri Garden": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Rithala|red|dmrc:Rohini West": {
+   "platform": "2",
+   "towards": "SHAHEED STHAL ( NEW BUS ADDA)"
+  },
+  "dmrc:Rohini Sector 18, 19|yellow|dmrc:Haiderpur Badli Mor": {
+   "platform": "1",
+   "towards": "MILLENNIUM CITY CENTRE GURUGRAM"
+  },
+  "dmrc:Rohini Sector 18, 19|yellow|dmrc:Samaypur Badli": {
+   "platform": "2",
+   "towards": "SAMAYPUR BADLI"
+  },
+  "dmrc:Sadar Bazar Cantonment|magenta|dmrc:Palam": {
+   "platform": "2",
+   "towards": "KRISHNA PARK EXTENSION"
+  },
+  "dmrc:Sadar Bazar Cantonment|magenta|dmrc:Terminal 1 IGI Airport": {
+   "platform": "1",
+   "towards": "BOTANICAL GARDEN"
+  },
+  "dmrc:Saket|yellow|dmrc:Malviya Nagar": {
+   "platform": "2",
+   "towards": "SAMAYPUR BADLI"
+  },
+  "dmrc:Saket|yellow|dmrc:Qutab Minar": {
+   "platform": "1",
+   "towards": "MILLENNIUM CITY CENTRE GURUGRAM"
+  },
+  "dmrc:Samaypur Badli|yellow|dmrc:Rohini Sector 18, 19": {
+   "platform": "1",
+   "towards": "MILLENNIUM CITY CENTRE GURUGRAM"
+  },
+  "dmrc:Sant Surdas (Sihi)|violet|dmrc:Escorts Mujesar": {
+   "platform": "2",
+   "towards": "KASHMERE GATE"
+  },
+  "dmrc:Sant Surdas (Sihi)|violet|dmrc:Raja Nahar Singh": {
+   "platform": "1",
+   "towards": "RAJA NAHAR SINGH (BALLABHGARH)"
+  },
+  "dmrc:Sarai Kale Khan - Nizamuddin|pink|dmrc:Ashram": {
+   "platform": "2",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:Sarai Kale Khan - Nizamuddin|pink|dmrc:Mayur Vihar - I": {
+   "platform": "1",
+   "towards": "MAUJPUR-BABARPUR"
+  },
+  "dmrc:Sarai|violet|dmrc:Badarpur": {
+   "platform": "2",
+   "towards": "KASHMERE GATE"
+  },
+  "dmrc:Sarai|violet|dmrc:NHPC Chowk": {
+   "platform": "1",
+   "towards": "RAJA NAHAR SINGH (BALLABHGARH)"
+  },
+  "dmrc:Sarita Vihar|violet|dmrc:Jasola Apollo": {
+   "platform": "2",
+   "towards": "KASHMERE GATE"
+  },
+  "dmrc:Sarita Vihar|violet|dmrc:Mohan Estate": {
+   "platform": "1",
+   "towards": "RAJA NAHAR SINGH (BALLABHGARH)"
+  },
+  "dmrc:Sarojini Nagar|pink|dmrc:Bhikaji Cama Place": {
+   "platform": "2",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:Sarojini Nagar|pink|dmrc:Dilli Haat - INA": {
+   "platform": "1",
+   "towards": "MAUJPUR-BABARPUR"
+  },
+  "dmrc:Satguru Ramsingh Marg|green|dmrc:Ashok Park Main": {
+   "platform": "1",
+   "towards": "BRIG. HOSHIAR SINGH"
+  },
+  "dmrc:Satguru Ramsingh Marg|green|dmrc:Kirti Nagar": {
+   "platform": "2",
+   "towards": "KIRTI NAGAR"
+  },
+  "dmrc:Sector 28|violet|dmrc:Badhkal Mor": {
+   "platform": "1",
+   "towards": "RAJA NAHAR SINGH (BALLABHGARH)"
+  },
+  "dmrc:Sector 28|violet|dmrc:Mewala Maharajpur": {
+   "platform": "2",
+   "towards": "KASHMERE GATE"
+  },
+  "dmrc:Seelampur|red|dmrc:Shastri Park": {
+   "platform": "1",
+   "towards": "RITHALA"
+  },
+  "dmrc:Seelampur|red|dmrc:Welcome": {
+   "platform": "2",
+   "towards": "SHAHEED STHAL ( NEW BUS ADDA)"
+  },
+  "dmrc:Shadipur|blue|dmrc:Kirti Nagar": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Shadipur|blue|dmrc:Patel Nagar": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Shahdara|red|dmrc:Mansarovar Park": {
+   "platform": "2",
+   "towards": "SHAHEED STHAL ( NEW BUS ADDA)"
+  },
+  "dmrc:Shahdara|red|dmrc:Welcome": {
+   "platform": "1",
+   "towards": "RITHALA"
+  },
+  "dmrc:Shaheed Nagar|red|dmrc:Dilshad Garden": {
+   "platform": "1",
+   "towards": "RITHALA"
+  },
+  "dmrc:Shaheed Nagar|red|dmrc:Raj Bagh": {
+   "platform": "2",
+   "towards": "SHAHEED STHAL ( NEW BUS ADDA)"
+  },
+  "dmrc:Shaheed Sthal|red|dmrc:Hindon River": {
+   "platform": "1",
+   "towards": "RITHALA"
+  },
+  "dmrc:Shakurpur|pink|dmrc:Netaji Subhash Place": {
+   "platform": "2",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:Shakurpur|pink|dmrc:Punjabi Bagh West": {
+   "platform": "1",
+   "towards": "MAUJPUR-BABARPUR"
+  },
+  "dmrc:Shalimar Bagh|pink|dmrc:Azadpur": {
+   "platform": "2",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:Shalimar Bagh|pink|dmrc:Netaji Subhash Place": {
+   "platform": "1",
+   "towards": "MAUJPUR-BABARPUR"
+  },
+  "dmrc:Shankar Vihar|magenta|dmrc:Terminal 1 IGI Airport": {
+   "platform": "2",
+   "towards": "KRISHNA PARK EXTENSION"
+  },
+  "dmrc:Shankar Vihar|magenta|dmrc:Vasant Vihar": {
+   "platform": "1",
+   "towards": "BOTANICAL GARDEN"
+  },
+  "dmrc:Shastri Nagar|red|dmrc:Inderlok": {
+   "platform": "1",
+   "towards": "RITHALA"
+  },
+  "dmrc:Shastri Nagar|red|dmrc:Pratap Nagar": {
+   "platform": "2",
+   "towards": "SHAHEED STHAL ( NEW BUS ADDA)"
+  },
+  "dmrc:Shastri Park|red|dmrc:Kashmere Gate": {
+   "platform": "1",
+   "towards": "RITHALA"
+  },
+  "dmrc:Shastri Park|red|dmrc:Seelampur": {
+   "platform": "2",
+   "towards": "SHAHEED STHAL ( NEW BUS ADDA)"
+  },
+  "dmrc:Shiv Vihar|pink|dmrc:Johri Enclave": {
+   "platform": "2",
+   "towards": "MAUJPUR-BABARPUR"
+  },
+  "dmrc:Shivaji Park|green|dmrc:Madipur": {
+   "platform": "1",
+   "towards": "BRIG. HOSHIAR SINGH"
+  },
+  "dmrc:Shivaji Park|green|dmrc:Punjabi Bagh West": {
+   "platform": "2",
+   "towards": "KIRTI NAGAR"
+  },
+  "dmrc:Shivaji Stadium|airport|dmrc:Dhaula Kuan": {
+   "platform": "1",
+   "towards": "YASHOBHOOMI DWARKA SECTOR  - 25"
+  },
+  "dmrc:Shivaji Stadium|airport|dmrc:New Delhi": {
+   "platform": "2",
+   "towards": "NEW DELHI (Yellow & Airport Line)"
+  },
+  "dmrc:Shyam Park|red|dmrc:Mohan Nagar": {
+   "platform": "2",
+   "towards": "SHAHEED STHAL ( NEW BUS ADDA)"
+  },
+  "dmrc:Shyam Park|red|dmrc:Rajendra Nagar": {
+   "platform": "1",
+   "towards": "RITHALA"
+  },
+  "dmrc:Sikanderpur|yellow|dmrc:Guru Dronacharya": {
+   "platform": "2",
+   "towards": "SAMAYPUR BADLI"
+  },
+  "dmrc:Sikanderpur|yellow|dmrc:M G Road": {
+   "platform": "1",
+   "towards": "MILLENNIUM CITY CENTRE GURUGRAM"
+  },
+  "dmrc:Sir M. Vishweshwaraiah Moti Bagh|pink|dmrc:Bhikaji Cama Place": {
+   "platform": "1",
+   "towards": "MAUJPUR-BABARPUR"
+  },
+  "dmrc:Sir M. Vishweshwaraiah Moti Bagh|pink|dmrc:Durgabai Deshmukh South Campus": {
+   "platform": "2",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:Soorghat|pink|dmrc:Jagatpur - Wazirabad": {
+   "platform": "2",
+   "towards": "MAUJPUR-BABARPUR"
+  },
+  "dmrc:Soorghat|pink|dmrc:Nanaksar - Sonia Vihar": {
+   "platform": "1",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:South Extension|pink|dmrc:Dilli Haat - INA": {
+   "platform": "2",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:South Extension|pink|dmrc:Lajpat Nagar": {
+   "platform": "1",
+   "towards": "MAUJPUR-BABARPUR"
+  },
+  "dmrc:Subhash Nagar|blue|dmrc:Tagore Garden": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Subhash Nagar|blue|dmrc:Tilak Nagar": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Sukhdev Vihar|magenta|dmrc:Jamia Millia Islamia": {
+   "platform": "2",
+   "towards": "BOTANICAL GARDEN"
+  },
+  "dmrc:Sukhdev Vihar|magenta|dmrc:Okhla NSIC": {
+   "platform": "1",
+   "towards": "KRISHNA PARK EXTENSION"
+  },
+  "dmrc:Sultanpur|yellow|dmrc:Chhatarpur": {
+   "platform": "2",
+   "towards": "SAMAYPUR BADLI"
+  },
+  "dmrc:Sultanpur|yellow|dmrc:Ghitorni": {
+   "platform": "1",
+   "towards": "MILLENNIUM CITY CENTRE GURUGRAM"
+  },
+  "dmrc:Supreme Court|blue|dmrc:Indraprastha": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Supreme Court|blue|dmrc:Mandi House": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Surajmal Stadium|green|dmrc:Nangloi": {
+   "platform": "1",
+   "towards": "BRIG. HOSHIAR SINGH"
+  },
+  "dmrc:Surajmal Stadium|green|dmrc:Udyog Nagar": {
+   "platform": "2",
+   "towards": "KIRTI NAGAR"
+  },
+  "dmrc:Tagore Garden|blue|dmrc:Rajouri Garden": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Tagore Garden|blue|dmrc:Subhash Nagar": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Terminal 1 IGI Airport|magenta|dmrc:Sadar Bazar Cantonment": {
+   "platform": "2",
+   "towards": "KRISHNA PARK EXTENSION"
+  },
+  "dmrc:Terminal 1 IGI Airport|magenta|dmrc:Shankar Vihar": {
+   "platform": "1",
+   "towards": "BOTANICAL GARDEN"
+  },
+  "dmrc:Tikri Border|green|dmrc:Pandit Shree Ram Sharma": {
+   "platform": "1",
+   "towards": "BRIG. HOSHIAR SINGH"
+  },
+  "dmrc:Tikri Border|green|dmrc:Tikri Kalan": {
+   "platform": "2",
+   "towards": "KIRTI NAGAR"
+  },
+  "dmrc:Tikri Kalan|green|dmrc:Ghevra": {
+   "platform": "2",
+   "towards": "KIRTI NAGAR"
+  },
+  "dmrc:Tikri Kalan|green|dmrc:Tikri Border": {
+   "platform": "1",
+   "towards": "BRIG. HOSHIAR SINGH"
+  },
+  "dmrc:Tilak Nagar|blue|dmrc:Janakpuri East": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Tilak Nagar|blue|dmrc:Subhash Nagar": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Tis Hazari|red|dmrc:Kashmere Gate": {
+   "platform": "2",
+   "towards": "SHAHEED STHAL ( NEW BUS ADDA)"
+  },
+  "dmrc:Tis Hazari|red|dmrc:Pul Bangash": {
+   "platform": "1",
+   "towards": "RITHALA"
+  },
+  "dmrc:Trilokpuri Sanjay Lake|pink|dmrc:East Vinod Nagar - Mayur Vihar - II": {
+   "platform": "1",
+   "towards": "MAUJPUR-BABARPUR"
+  },
+  "dmrc:Trilokpuri Sanjay Lake|pink|dmrc:Shree Ram Mandir Mayur Vihar": {
+   "platform": "2",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:Tughlakabad|violet|dmrc:Badarpur": {
+   "platform": "1",
+   "towards": "RAJA NAHAR SINGH (BALLABHGARH)"
+  },
+  "dmrc:Tughlakabad|violet|dmrc:Mohan Estate": {
+   "platform": "2",
+   "towards": "KASHMERE GATE"
+  },
+  "dmrc:Udyog Nagar|green|dmrc:Peeragarhi": {
+   "platform": "2",
+   "towards": "KIRTI NAGAR"
+  },
+  "dmrc:Udyog Nagar|green|dmrc:Surajmal Stadium": {
+   "platform": "1",
+   "towards": "BRIG. HOSHIAR SINGH"
+  },
+  "dmrc:Uttam Nagar East|blue|dmrc:Janakpuri West": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Uttam Nagar East|blue|dmrc:Uttam Nagar West": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Uttam Nagar West|blue|dmrc:Nawada": {
+   "platform": "2",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Uttam Nagar West|blue|dmrc:Uttam Nagar East": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Vaishali|blue|dmrc:Kaushambi": {
+   "platform": "2",
+   "towards": "YAMUNA BANK"
+  },
+  "dmrc:Vasant Vihar|magenta|dmrc:Munirka": {
+   "platform": "1",
+   "towards": "BOTANICAL GARDEN"
+  },
+  "dmrc:Vasant Vihar|magenta|dmrc:Shankar Vihar": {
+   "platform": "2",
+   "towards": "KRISHNA PARK EXTENSION"
+  },
+  "dmrc:Vidhan Sabha|yellow|dmrc:Civil Lines": {
+   "platform": "1",
+   "towards": "MILLENNIUM CITY CENTRE GURUGRAM"
+  },
+  "dmrc:Vidhan Sabha|yellow|dmrc:Vishwa Vidyalaya": {
+   "platform": "2",
+   "towards": "SAMAYPUR BADLI"
+  },
+  "dmrc:Vinobapuri|pink|dmrc:Ashram": {
+   "platform": "1",
+   "towards": "MAUJPUR-BABARPUR"
+  },
+  "dmrc:Vinobapuri|pink|dmrc:Lajpat Nagar": {
+   "platform": "2",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:Vishwa Vidyalaya|yellow|dmrc:GTB Nagar": {
+   "platform": "2",
+   "towards": "SAMAYPUR BADLI"
+  },
+  "dmrc:Vishwa Vidyalaya|yellow|dmrc:Vidhan Sabha": {
+   "platform": "1",
+   "towards": "MILLENNIUM CITY CENTRE GURUGRAM"
+  },
+  "dmrc:Welcome|pink|dmrc:East Azad Nagar": {
+   "platform": "3",
+   "towards": "YAMUNA VIHAR"
+  },
+  "dmrc:Welcome|red|dmrc:Seelampur": {
+   "platform": "1",
+   "towards": "RITHALA"
+  },
+  "dmrc:Welcome|red|dmrc:Shahdara": {
+   "platform": "2",
+   "towards": "SHAHEED STHAL ( NEW BUS ADDA)"
+  },
+  "dmrc:Yamuna Bank|blue|dmrc:Akshardham": {
+   "platform": "1",
+   "towards": "NOIDA ELECTRONIC CITY"
+  },
+  "dmrc:Yamuna Bank|blue|dmrc:Indraprastha": {
+   "platform": "4",
+   "towards": "DWARKA SECTOR - 21"
+  },
+  "dmrc:Yamuna Bank|blue|dmrc:Laxmi Nagar": {
+   "platform": "3",
+   "towards": "VAISHALI"
+  },
+  "dmrc:Yamuna Vihar|pink|dmrc:Bhajanpura": {
+   "platform": "2",
+   "towards": "MAUJPUR-BABARPUR"
+  },
+  "dmrc:Yamuna Vihar|pink|dmrc:Maujpur - Babarpur": {
+   "platform": "2",
+   "towards": "MAUJPUR-BABARPUR"
+  },
+  "dmrc:Yashobhoomi Dwarka Sector 25|airport|dmrc:Dwarka Sector 21": {
+   "platform": "1",
+   "towards": "NEW DELHI (Yellow & Airport Line)"
+  }
+ }
+}

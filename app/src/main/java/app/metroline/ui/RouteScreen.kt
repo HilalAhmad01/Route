@@ -47,12 +47,14 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.metroline.R
@@ -356,8 +358,10 @@ private fun StationName(s: Station, primary: Boolean) {
 }
 
 @Composable
-private fun LineText(leg: Leg) = Row(verticalAlignment = Alignment.CenterVertically) {
-    LineDot(leg.line)
+private fun LineText(leg: Leg) = Row {
+    val dot = 8.dp
+    val lineHeight = with(LocalDensity.current) { T.secondary.lineHeight.toDp() }
+    Box(Modifier.padding(top = (lineHeight - dot) / 2)) { LineDot(leg.line, dot) }
     Spacer(Modifier.width(8.dp))
     Text(
         buildAnnotatedString {
@@ -368,6 +372,10 @@ private fun LineText(leg: Leg) = Row(verticalAlignment = Alignment.CenterVertica
             } else {
                 withStyle(SpanStyle(color = C.muted)) { append("  next stop ") }
                 append(leg.stations[1].name)
+            }
+            leg.platform?.let {
+                withStyle(SpanStyle(color = C.muted)) { append("  ·  ") }
+                withStyle(SpanStyle(color = C.text, fontWeight = FontWeight.Medium)) { append("Platform\u00A0$it") }
             }
         },
         style = T.secondary,

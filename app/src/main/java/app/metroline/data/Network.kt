@@ -43,6 +43,7 @@ data class NetworkDto(
     val walks: List<WalkDto>,
     val interchange: InterchangeDto,
     val fares: Map<String, JsonElement?>,
+    val platforms: Map<String, String> = emptyMap(),
 )
 
 class Line(val id: String, val name: String, val short: String, val color: Long, val system: String)
@@ -112,6 +113,9 @@ class Network(dto: NetworkDto) {
     fun interchangeMinutes(s: Station) = interchangeAt[s.name] ?: interchangeDefault
 
     val fares = FareRules.parse(dto.fares)
+
+    private val platforms = dto.platforms
+    fun platform(at: Station, line: Line, next: Station): String? = platforms["${at.id}|${line.id}|${next.id}"]
 
     val occurrences: List<List<Pair<Int, Int>>> = run {
         val occ = List(stations.size) { mutableListOf<Pair<Int, Int>>() }
