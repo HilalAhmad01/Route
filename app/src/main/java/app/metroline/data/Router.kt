@@ -14,6 +14,7 @@ class Leg(
     val changeMinutes: Int,
     val boardedByWalk: Boolean,
     val walkedFrom: Station? = null,
+    val platform: String? = null,
 ) {
     val isSameStationChange get() = walkedFrom == null || walkedFrom.name == from.name
     val from get() = stations.first()
@@ -165,6 +166,7 @@ class Router(private val net: Network) {
                     last.line, towards, stations, minutes, km,
                     if (start == 0) 0 else changeMin[first], start > 0 && how[first] == 2,
                     if (start > 0 && how[first] == 2) legs.lastOrNull()?.to else null,
+                    net.platform(stations[0], last.line, stations[1]),
                 )
             }
             start = k

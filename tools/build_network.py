@@ -5,6 +5,7 @@ import re
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 RAW = ROOT / "tools" / "raw" / "osm.json"
+PLATFORMS = ROOT / "tools" / "raw" / "dmrc_platforms.json"
 OUT = ROOT / "app" / "src" / "main" / "assets" / "network.json"
 
 PATTERNS = {
@@ -100,6 +101,63 @@ WALKS = [
     ("dmrc:Anand Vihar", "rrts:Anand Vihar", 10),
     ("dmrc:Dhaula Kuan", "dmrc:Durgabai Deshmukh South Campus", 15),
 ]
+
+# Platforms filled in by hand, keyed "station|line|next stop", checked 2026-11-02. These win over
+# DMRC's journey planner. Rohini West, Haiderpur Village and North Pitampura - Prashant Vihar aren't
+# in DMRC's station list, and DMRC gives an empty platform for most of the rest. Sources: yometro.com,
+# delhimetrorail.info and Wikipedia station layouts, each checked against the platform DMRC gives
+# for the opposite direction.
+MANUAL_PLATFORMS = {
+    "dmrc:Rohini West|red|dmrc:Rithala": "1",
+    "dmrc:Rohini West|red|dmrc:Rohini East": "2",
+    "dmrc:Haiderpur Village|magenta|dmrc:North Pitampura - Prashant Vihar": "1",
+    "dmrc:Haiderpur Village|magenta|dmrc:Haiderpur Badli Mor": "2",
+    "dmrc:North Pitampura - Prashant Vihar|magenta|dmrc:Madhuban Chowk": "1",
+    "dmrc:North Pitampura - Prashant Vihar|magenta|dmrc:Haiderpur Village": "2",
+    "dmrc:Rohini East|red|dmrc:Madhuban Chowk": "2",
+    "dmrc:Rohini East|red|dmrc:Rohini West": "1",
+    "dmrc:Madhuban Chowk|red|dmrc:Kohat Enclave": "2",
+    "dmrc:Madhuban Chowk|red|dmrc:Rohini East": "1",
+    "dmrc:Seva Teerth|yellow|dmrc:Lok Kalyan Marg": "1",
+    "dmrc:Seva Teerth|yellow|dmrc:Central Secretariat": "2",
+    "dmrc:Dwarka - Kakrola|blue|dmrc:Dwarka Mor": "1",
+    "dmrc:Dwarka - Kakrola|blue|dmrc:Dwarka Sector 14": "2",
+    "dmrc:Anand Vihar|blue|dmrc:Karkarduma": "2",
+    "dmrc:Preet Vihar|blue|dmrc:Nirman Vihar": "2",
+    "dmrc:Laxmi Nagar|blue|dmrc:Yamuna Bank": "2",
+    "dmrc:Lajpat Nagar|pink|dmrc:Vinobapuri": "3",
+    "dmrc:Mayur Vihar - I|pink|dmrc:Shree Ram Mandir Mayur Vihar": "3",
+    "dmrc:Shree Ram Mandir Mayur Vihar|pink|dmrc:Trilokpuri Sanjay Lake": "1",
+    "dmrc:Shree Ram Mandir Mayur Vihar|pink|dmrc:Mayur Vihar - I": "2",
+    "dmrc:Anand Vihar|pink|dmrc:Karkarduma": "3",
+    "dmrc:Karkarduma|pink|dmrc:Karkarduma Court": "3",
+    "dmrc:Johri Enclave|pink|dmrc:Gokulpuri": "2",
+    "dmrc:Gokulpuri|pink|dmrc:Maujpur - Babarpur": "2",
+    "dmrc:Jagatpur - Wazirabad|pink|dmrc:Jharoda Majra": "1",
+    "dmrc:Jagatpur - Wazirabad|pink|dmrc:Soorghat": "2",
+    # Sources disagree here; these follow delhimetrorail.info.
+    "dmrc:Welcome|pink|dmrc:Jaffrabad": "3",
+    "dmrc:Welcome|pink|dmrc:East Azad Nagar": "4",
+    "dmrc:Maujpur - Babarpur|pink|dmrc:Jaffrabad": "2",
+    "dmrc:Dwarka Sector 21|airport|dmrc:IGI Airport": "3",
+    "dmrc:IGI Airport|airport|dmrc:Delhi Aerocity": "3",
+    "dmrc:IGI Airport|airport|dmrc:Dwarka Sector 21": "2",
+    "dmrc:Delhi Aerocity|airport|dmrc:Dhaula Kuan": "1",
+    "dmrc:Delhi Aerocity|airport|dmrc:IGI Airport": "2",
+    "dmrc:Dhaula Kuan|airport|dmrc:Shivaji Stadium": "1",
+    "dmrc:Dhaula Kuan|airport|dmrc:Delhi Aerocity": "2",
+    "dmrc:Shivaji Stadium|airport|dmrc:New Delhi": "1",
+    "dmrc:Shivaji Stadium|airport|dmrc:Dhaula Kuan": "2",
+}
+# DMRC's Airport Express platforms disagree with delhimetrorail.info and Wikipedia, so only the
+# hand-checked ones above are used.
+PLATFORM_SKIP_LINES = {"airport"}
+# No platform is shown where no source can be trusted: DMRC gives Yamuna Vihar 2 in both directions,
+# and the Maujpur - Babarpur to Yamuna Vihar stretch isn't on delhimetrorail.info yet.
+PLATFORM_DOUBTS = {
+    "dmrc:Yamuna Vihar|pink|dmrc:Bhajanpura",
+    "dmrc:Yamuna Vihar|pink|dmrc:Maujpur - Babarpur",
+}
 
 INTERCHANGE_DEFAULT = 5
 INTERCHANGE = {
@@ -208,6 +266,23 @@ def main():
         assert sid in stations, sid
         stations[sid]["aliases"] = names
 
+    platforms = dict(MANUAL_PLATFORMS)
+    if PLATFORMS.exists():
+        for key, v in json.loads(PLATFORMS.read_text())["platforms"].items():
+            if key.split("|")[1] not in PLATFORM_SKIP_LINES:
+                platforms.setdefault(key, v["platform"])
+    # At a terminus trains leave from either platform, so a single number would mislead.
+    neighbours = {}
+    for p in patterns:
+        for a, b in zip(p["stops"], p["stops"][1:]):
+            neighbours.setdefault((a, p["line"]), set()).add(b)
+            neighbours.setdefault((b, p["line"]), set()).add(a)
+    for key in list(platforms):
+        sid, line, nxt = key.split("|")
+        if (sid not in stations or nxt not in stations or key in PLATFORM_DOUBTS
+                or len(neighbours.get((sid, line), ())) < 2):
+            del platforms[key]
+
     out = {
         "version": raw["osm3s"]["timestamp_osm_base"][:10],
         "source": "OpenStreetMap contributors (ODbL)",
@@ -217,10 +292,11 @@ def main():
         "walks": [{"a": a, "b": b, "min": m} for a, b, m in WALKS],
         "interchange": {"default": INTERCHANGE_DEFAULT, "at": INTERCHANGE},
         "fares": FARES,
+        "platforms": platforms,
     }
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")))
-    print(f"{len(stations)} stations, {len(patterns)} patterns -> {OUT} ({OUT.stat().st_size // 1024} KB)")
+    print(f"{len(stations)} stations, {len(patterns)} patterns, {len(platforms)} platforms -> {OUT} ({OUT.stat().st_size // 1024} KB)")
 
 
 if __name__ == "__main__":

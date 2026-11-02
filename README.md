@@ -38,7 +38,8 @@ one job and does it fast.
 
 - **Fastest** and **fewer changes** routes, plus Airport Express when it's quicker
 - Time, fare, stations and changes at a glance, with every leg drawn in its line colour
-- Which way to board ("towards Noida Electronic City") and how long each change takes
+- Which way and which platform to board ("towards Noida Electronic City · Platform 1") and how
+  long each change takes
 - **Smart card fares** — 10% off, 20% off-peak — or token fares
 - Search the way people talk: **"CP"**, **"HUDA City"**, **"Race Course"**, **"T3"**
 - **Bookmarks** — Home, Work, College, Gym. One tap starts your trip there. Hold the app icon
@@ -92,9 +93,17 @@ New stations opened? Refresh the network:
 python3 tools/fetch_osm.py && python3 tools/build_network.py
 ```
 
+Platform numbers come from DMRC's journey planner. `tools/fetch_platforms.py` fetches only what's
+missing from `tools/raw/dmrc_platforms.json`; delete that file to fetch everything again:
+
+```bash
+python3 tools/fetch_platforms.py && python3 tools/build_network.py
+```
+
 ## Credits
 
-Map data © OpenStreetMap contributors (ODbL) · Icons: Lucide (ISC) · Fonts: IBM Plex (OFL) ·
+Map data © OpenStreetMap contributors (ODbL) · Platform numbers: DMRC ·
+Icons: Lucide (ISC) · Fonts: IBM Plex (OFL) ·
 Design direction: [unslop](https://github.com/heydamir/unslop) by Damir Sokolovsky (CC BY 4.0).
 Details in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
