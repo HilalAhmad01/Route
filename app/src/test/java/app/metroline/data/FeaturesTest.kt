@@ -76,8 +76,8 @@ class FeaturesTest {
             Adarsh Nagar → Akshardham
             ${j.minutes} min · ₹43 · 18 stations · 1 change
 
-            Yellow Line from Adarsh Nagar towards Millennium City Centre Gurugram, 11 stops to Rajiv Chowk
-            Change to Blue Line towards Noida Electronic City (5 min), 6 stops to Akshardham
+            Yellow Line from Adarsh Nagar towards Millennium City Centre Gurugram, Platform No. 1, 11 stops to Rajiv Chowk
+            Change to Blue Line towards Noida Electronic City, Platform No. 3 (5 min), 6 stops to Akshardham
             """.trimIndent(),
             text,
         )
@@ -90,7 +90,27 @@ class FeaturesTest {
 
         val rapid = route("dmrc:Adarsh Nagar", "rmgl:DLF Phase 3")
         val t2 = ShareText.of(rapid, Fares.quote(net, rapid, FareContext(FareDay.Weekday)))
-        assertTrue(t2, "Change to Rapid Metro towards DLF Phase 3 (10 min), 5 stops to DLF Phase 3" in t2)
+        assertTrue(t2, "Change to Rapid Metro towards DLF Phase 3, Platform No. 2 (10 min), 5 stops to DLF Phase 3" in t2)
         assertTrue(t2, "1 change" in t2)
+    }
+
+    @Test fun platformFollowsWhereTheLegGetsOff() {
+        val toMaujpur = route("dmrc:Majlis Park", "dmrc:Maujpur - Babarpur").legs.single()
+        assertEquals("Platform No. 1", toMaujpur.platform)
+        assertEquals("Maujpur - Babarpur", toMaujpur.towards)
+
+        val toYamuna = route("dmrc:Majlis Park", "dmrc:Yamuna Vihar").legs.single()
+        assertEquals("Platform No. 2", toYamuna.platform)
+        assertEquals("Yamuna Vihar", toYamuna.towards)
+    }
+
+    @Test fun legsShowPlatforms() {
+        val j = route("dmrc:Adarsh Nagar", "nmrc:Knowledge Park II")
+        assertEquals(listOf("Platform No. 1", "Platform No. 3", null), j.legs.map { it.platform })
+
+        // Westbound trains at Yamuna Bank use platform 2 or 4; only one is shown, so show none.
+        val westFromYamunaBank = route("dmrc:Yamuna Bank", "dmrc:Mandi House")
+        assertEquals(listOf(2, 4), westFromYamunaBank.legs.single().platforms)
+        assertEquals(null, westFromYamunaBank.legs.single().platform)
     }
 }

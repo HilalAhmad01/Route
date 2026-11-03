@@ -327,7 +327,11 @@ private fun RideRows(leg: Leg) {
             Modifier.padding(bottom = 4.dp).press({ open = !open }).padding(vertical = 6.dp, horizontal = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text("${leg.hops} ${if (leg.hops == 1) "stop" else "stops"} · ${Math.round(leg.minutes)} min", style = T.meta)
+            Text(
+                "${leg.hops} ${if (leg.hops == 1) "stop" else "stops"} · ${Math.round(leg.minutes)} min" +
+                    leg.platform?.let { " · $it" }.orEmpty(),
+                style = T.meta,
+            )
             if (between.isNotEmpty()) {
                 Spacer(Modifier.width(4.dp))
                 Ic(R.drawable.ic_chevron_right, C.muted, 14.dp, if (open) Modifier.rotate(90f) else Modifier)

@@ -58,6 +58,7 @@ android {
         compose = true
     }
     sourceSets["test"].resources.srcDir("src/main/assets")
+    testOptions.unitTests.isIncludeAndroidResources = true
 }
 
 dependencies {
@@ -70,6 +71,10 @@ dependencies {
     implementation("androidx.core:core-ktx:1.15.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
     debugImplementation("androidx.compose.ui:ui-tooling")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     testImplementation("junit:junit:4.13.2")
+    testImplementation(composeBom)
+    testImplementation("androidx.compose.ui:ui-test-junit4")
+    testImplementation("org.robolectric:robolectric:4.14.1")
 }

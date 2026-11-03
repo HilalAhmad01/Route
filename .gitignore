@@ -52,3 +52,7 @@ Thumbs.db
 
 # Project-specific
 engagements/
+
+# DMRC platform table (licensing pending; not for publication)
+delhi_metro_platforms_table.csv
+tools/raw/platforms.csv

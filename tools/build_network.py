@@ -1,3 +1,4 @@
+import csv
 import json
 import math
 import pathlib
@@ -5,6 +6,7 @@ import re
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 RAW = ROOT / "tools" / "raw" / "osm.json"
+PLATFORMS = ROOT / "tools" / "raw" / "platforms.csv"
 OUT = ROOT / "app" / "src" / "main" / "assets" / "network.json"
 
 PATTERNS = {
@@ -120,6 +122,37 @@ TIME = {
     "rrts": (1.0, 110.0),
 }
 
+PLATFORM_LINES = {
+    "Red Line": "red", "Yellow Line": "yellow", "Blue Line": "blue", "Green Line": "green",
+    "Violet Line": "violet", "Pink Line": "pink", "Magenta Line": "magenta", "Grey Line": "grey",
+    "Orange Line": "airport", "Rapid Metro": "rapid",
+}
+
+# Platform-table names that don't normalise to Route's. North Pitampura and Prashant Vihar are left out:
+# the table lists them as two stations where OSM has Haiderpur Village and North Pitampura - Prashant Vihar.
+PLATFORM_NAMES = {
+    "BADARPUR BORDER": "Badarpur", "BADKAL MOR": "Badhkal Mor", "BARAKHAMBA ROAD": "Barakhambha Road",
+    "BRIG. HOSHIAR SINGH": "Brigadier Hoshiyar Singh", "GOLF COURSE": "Noida Golf Course",
+    "GURU TEG BAHADUR NAGAR": "GTB Nagar", "IIT": "IIT Delhi", "JLN STADIUM": "Jawaharlal Nehru Stadium",
+    "JAFRABAD": "Jaffrabad", "MAHARAJA SURAJMAL STADIUM": "Surajmal Stadium",
+    "MAJOR MOHIT SHARMA RAJENDRA NAGAR": "Rajendra Nagar",
+    "SHREE RAM MAYUR VIHAR MANDIR (earlier MAYUR VIHAR POCKET-1)": "Shree Ram Mandir Mayur Vihar",
+    "PHASE-1": "DLF Phase 1", "PHASE-2": "DLF Phase 2", "PHASE-3": "DLF Phase 3",
+    "ROHINI": "Rohini East", "DR. BABA SAHEB AMBEDKAR HOSPITAL": "Rohini West",
+    "SECTOR - 34 NOIDA": "Noida Sector 34", "SECTOR - 52 NOIDA": "Noida Sector 52",
+    "SECTOR - 59 NOIDA": "Noida Sector 59", "SECTOR - 61 NOIDA": "Noida Sector 61",
+    "SECTOR - 62 NOIDA": "Noida Sector 62", "SONIA VIHAR": "Nanaksar - Sonia Vihar",
+    "GHEVRA METRO STATION": "Ghevra",
+}
+
+# Stations where Rapid Metro trains run on into the next pattern, so a platform's
+# "towards" can lie beyond the end of the pattern being boarded.
+THROUGH_RUNNING = {("rapid", "Sikanderpur")}
+
+# (line, station, next stop) left without a platform: from Maujpur towards Yamuna Vihar the table only
+# lists the extension's platforms as "towards Maujpur-Babarpur", so no row names this direction.
+NO_PLATFORM = {("pink", "Maujpur - Babarpur", "Yamuna Vihar")}
+
 FARES = {
     "dmrc": {
         "slabs_km": [2, 5, 12, 21, 32],
@@ -144,6 +177,77 @@ def km(a, b):
     la1, lo1, la2, lo2 = map(math.radians, (a[0], a[1], b[0], b[1]))
     x = (lo2 - lo1) * math.cos((la1 + la2) / 2)
     return 6371 * math.hypot(x, la2 - la1)
+
+
+def norm(name):
+    return re.sub(r"[^a-z0-9]", "", name.lower().replace(" station", ""))
+
+
+def add_platforms(stations, patterns):
+    """Give each Delhi Metro/Rapid pattern stop the platform(s) its trains leave from, or [] if unknown."""
+    by_name = {}
+    for sid, s in stations.items():
+        for key in {norm(s["name"]), *map(norm, s.get("aliases", []))}:
+            by_name.setdefault(key, []).append(sid)
+
+    def resolve(name, line):
+        name = PLATFORM_NAMES.get(name, name)
+        for key in (name, re.sub(r"\s*\(.*?\)", "", name), *re.findall(r"\(earlier (.*?)\)", name)):
+            hits = [sid for sid in by_name.get(norm(key), []) if line in stations[sid]["lines"]]
+            if hits:
+                return hits[0]
+        return None
+
+    rows, unmatched = {}, set()
+    with PLATFORMS.open(newline="") as f:
+        for r in csv.DictReader(f):
+            line = PLATFORM_LINES[r["line"]]
+            sid = resolve(r["station_name"], line)
+            if sid is None:
+                unmatched.add(r["station_name"])
+                continue
+            named = [resolve(t.strip(), line) for t in r["train_towards"].split("/")]
+            named = [t for t in named if t]
+            towards = [t for t in named if t != sid]
+            rows.setdefault((sid, line), []).append((towards, int(r["platform_code"][2:]), named))
+
+    name = {sid: s["name"] for sid, s in stations.items()}
+    covered = 0
+    for p in patterns:
+        line, stops = p["line"], p["stops"]
+        ahead_all = list(stops)
+        if p["towards"] != name[stops[-1]]:  # e.g. Vaishali trains end at Yamuna Bank but run on to Dwarka
+            for q in patterns:
+                if q["line"] == line and stops[-1] in q["stops"][:-1]:
+                    rest = q["stops"][q["stops"].index(stops[-1]) + 1:]
+                    if p["towards"] in (name[s] for s in rest):
+                        ahead_all += rest
+                        break
+        if (line, name[stops[-1]]) in THROUGH_RUNNING:
+            for q in patterns:
+                if q is not p and q["line"] == line and q["stops"][0] == stops[-1] and q["stops"][1] != stops[-2]:
+                    ahead_all += q["stops"][1:]
+        platforms, dirs = [], []
+        for i, sid in enumerate(stops):
+            # Platform per direction, so a leg can pick the platform that serves where it gets off.
+            dirs.append([{"p": n, "t": named} for _, n, named in rows.get((sid, line), []) if named])
+            if i == len(stops) - 1 or (line, name[sid], name[stops[i + 1]]) in NO_PLATFORM:
+                platforms.append([])
+                continue
+            pos = {}
+            for k, t in enumerate(ahead_all[i + 1:]):
+                pos.setdefault(t, k)
+            # Prefer a platform whose first-named destination is ahead, then the nearest one.
+            ranked = [(min((k > 0, pos[t]) for k, t in enumerate(towards) if t in pos), n)
+                      for towards, n, _ in rows.get((sid, line), []) if any(t in pos for t in towards)]
+            best = min((r for r, _ in ranked), default=None)
+            platforms.append(sorted({n for r, n in ranked if r == best}))
+            covered += bool(platforms[-1])
+        if any(platforms):
+            p["platforms"] = platforms
+        if any(dirs):
+            p["dirs"] = dirs
+    print(f"platforms for {covered} pattern stops; unmatched platform-table stations: {sorted(unmatched)}")
 
 
 def main():
@@ -207,6 +311,7 @@ def main():
     for sid, names in ALIASES.items():
         assert sid in stations, sid
         stations[sid]["aliases"] = names
+    add_platforms(stations, patterns)
 
     out = {
         "version": raw["osm3s"]["timestamp_osm_base"][:10],

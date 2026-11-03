@@ -25,7 +25,12 @@ data class PatternDto(
     val towards: String,
     val km: List<Double>,
     val min: List<Double>,
+    val platforms: List<List<Int>> = emptyList(),
+    val dirs: List<List<PlatformDirDto>> = emptyList(),
 )
+
+@Serializable
+data class PlatformDirDto(val p: Int, val t: List<String>)
 
 @Serializable
 data class WalkDto(val a: String, val b: String, val min: Int)
@@ -75,7 +80,23 @@ class Pattern(
     val towards: String,
     val km: DoubleArray,
     val min: DoubleArray,
-)
+    /** Platforms trains leave from at each stop; empty where unknown. */
+    val platforms: List<List<Int>>,
+    /** Per stop, each platform with the stations its trains go towards. */
+    val dirs: List<List<PlatformDir>>,
+) {
+    /**
+     * The platform whose trains serve [exit], when exactly one does, preferring platforms that name
+     * fewer destinations. Null when none or several tie, so the caller falls back to [platforms].
+     */
+    fun platformFor(pos: Int, exit: Station): PlatformDir? {
+        val exact = dirs[pos].filter { exit.index in it.towards }
+        val fewest = exact.minOfOrNull { it.towards.size } ?: return null
+        return exact.singleOrNull { it.towards.size == fewest }
+    }
+}
+
+class PlatformDir(val platform: Int, val towards: Set<Int>)
 
 class Walk(val a: Int, val b: Int, val minutes: Int)
 
@@ -103,7 +124,9 @@ class Network(dto: NetworkDto) {
     val patterns: List<Pattern> = dto.patterns.mapIndexed { i, p ->
         Pattern(
             i, line(p.line), p.stops.map(stationIndex::getValue).toIntArray(), p.towards,
-            p.km.toDoubleArray(), p.min.toDoubleArray(),
+            p.km.toDoubleArray(), p.min.toDoubleArray(), p.platforms,
+            p.dirs.ifEmpty { List(p.stops.size) { emptyList() } }
+                .map { stops -> stops.map { PlatformDir(it.p, it.t.map { t -> stationIndex.getValue(t) }.toSet()) } },
         )
     }
     val walks: List<Walk> = dto.walks.map { Walk(stationIndex.getValue(it.a), stationIndex.getValue(it.b), it.min) }

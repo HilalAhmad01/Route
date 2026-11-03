@@ -14,6 +14,7 @@ class Leg(
     val changeMinutes: Int,
     val boardedByWalk: Boolean,
     val walkedFrom: Station? = null,
+    val platforms: List<Int> = emptyList(),
 ) {
     val isSameStationChange get() = walkedFrom == null || walkedFrom.name == from.name
     val from get() = stations.first()
@@ -21,6 +22,8 @@ class Leg(
     val hops get() = stations.size - 1
 
     val direction get() = if (towards.isNotEmpty()) "towards $towards" else "next stop ${stations[1].name}"
+    /** Shown only when one platform serves the leg; none when trains leave from several. */
+    val platform get() = platforms.singleOrNull()?.let { "Platform No. $it" }
 }
 
 class EndWalk(val station: Station, val minutes: Int)
@@ -155,16 +158,22 @@ class Router(private val net: Network) {
             val last = net.patterns[lastP]
             if (stations.size > 1) {
                 val first = chain[start]
+                val boardP = patternOf(first)
                 val boardPos = (start until k).first { patternOf(chain[it]) == lastP }.let { chain[it] - offsets[lastP] }
                 val stopNames = last.stops.map { net.stations[it].name }
                 val ahead = (boardPos + 1 until last.stops.size).any { stopNames[it] == last.towards }
                 val behind = !ahead && last.towards in stopNames
                 val terminal = if (behind) stopNames.last() else last.towards
-                val towards = if (terminal == stations.first().name) "" else terminal
+                val boardedAt = first - offsets[boardP]
+                // Platforms are read by where the leg gets off, as DMRC's planner does, falling back to the pattern.
+                val direct = net.patterns[boardP].platformFor(boardedAt, stations.last())
+                val shown = if (direct != null) stations.last().name else terminal
+                val towards = if (shown == stations.first().name) "" else shown
                 legs += Leg(
                     last.line, towards, stations, minutes, km,
                     if (start == 0) 0 else changeMin[first], start > 0 && how[first] == 2,
                     if (start > 0 && how[first] == 2) legs.lastOrNull()?.to else null,
+                    direct?.let { listOf(it.platform) } ?: net.patterns[boardP].platforms.getOrNull(boardedAt).orEmpty(),
                 )
             }
             start = k

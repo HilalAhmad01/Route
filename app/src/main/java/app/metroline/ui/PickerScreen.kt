@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -49,6 +50,9 @@ fun PickerScreen(target: PickTarget) {
     val d = deps()
     var query by remember { mutableStateOf("") }
     val results = remember(query) { StationSearch.search(d.net, query) }
+    // Fresh state per query: with keyed items, a shared state would follow the old first
+    // row (e.g. "Adarsh Nagar" also matches "d") and scroll the best matches out of view.
+    val listState = remember(query) { LazyListState() }
     val focus = remember { FocusRequester() }
     LaunchedEffect(Unit) { focus.requestFocus() }
     fun pick(s: Station): Unit = when (target) {
@@ -104,7 +108,7 @@ fun PickerScreen(target: PickTarget) {
             }
         }
         Hairline()
-        LazyColumn(Modifier.fillMaxSize()) {
+        LazyColumn(Modifier.fillMaxSize(), state = listState) {
             items(results, key = { it.station.id }) { m ->
                 val s = m.station
                 val meta = listOfNotNull(m.alias, s.operatorLabel().takeIf { s.system != "dmrc" }).joinToString(" · ")
