@@ -52,7 +52,7 @@ one job and does it fast.
 
 Route asks for **zero permissions**. No internet, no location, no contacts, no analytics, no
 accounts. Your bookmarks and trips live on your phone and are excluded from cloud backup. There
-is nothing to leak because nothing leaves the device.
+is nothing to leak because nothing leaves the device. Full text: [PRIVACY.md](PRIVACY.md).
 
 ## Fast, for real
 
@@ -77,10 +77,11 @@ marked ≈. Airport Express and Namo Bharat fares aren't included yet.
 
 ## Build
 
-JDK 17 + Android SDK:
+JDK 17 + Android SDK (platform 36):
 
 ```bash
-./gradlew :app:testDebugUnitTest :app:assembleRelease
+./gradlew :app:test :app:assembleRelease      # APK
+./gradlew :app:bundleRelease                  # Play Store bundle (.aab)
 ```
 
 To sign releases, put your keystore details in `keystore.properties` (`storeFile`,

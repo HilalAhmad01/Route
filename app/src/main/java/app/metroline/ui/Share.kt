@@ -22,19 +22,26 @@ suspend fun shareRoute(context: Context, picture: Bitmap?, text: String) {
             }
         }.getOrNull()
     }
-    if (file == null) {
-        val send = Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, text)
-        context.startActivity(Intent.createChooser(send, null))
+    val uri = file?.let { runCatching { FileProvider.getUriForFile(context, "${context.packageName}.share", it) }.getOrNull() }
+    if (uri == null) {
+        chooser(context, Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, text))
         return
     }
-    val uri = FileProvider.getUriForFile(context, "${context.packageName}.share", file)
     val send = Intent(Intent.ACTION_SEND)
         .setType("image/png")
         .putExtra(Intent.EXTRA_STREAM, uri)
         .putExtra(Intent.EXTRA_TEXT, text)
         .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
     send.clipData = ClipData.newRawUri(null, uri)
-    context.startActivity(Intent.createChooser(send, null))
+    chooser(context, send)
+}
+
+private fun chooser(context: Context, send: Intent) {
+    try {
+        context.startActivity(Intent.createChooser(send, null))
+    } catch (_: ActivityNotFoundException) {
+        Toast.makeText(context, "No app available to share with", Toast.LENGTH_SHORT).show()
+    }
 }
 
 fun stack(top: Bitmap, bottom: Bitmap): Bitmap {

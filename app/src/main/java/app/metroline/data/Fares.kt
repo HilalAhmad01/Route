@@ -41,8 +41,12 @@ class FareRules(
     val aquaStations: List<Int>,
     val aquaFares: List<Int>,
     val verified: Map<String, Boolean>,
+    /** Station pairs (smaller index * 4096 + larger) whose DMRC fare isn't the one their distance gives, as a slab. */
+    val dmrcOverrides: Map<Int, Int> = emptyMap(),
 ) {
     companion object {
+        fun pairKey(a: Int, b: Int) = minOf(a, b) * 4096 + maxOf(a, b)
+
         fun parse(f: Map<String, JsonElement?>): FareRules {
             val d = f.getValue("dmrc") as JsonObject
             val r = f.getValue("rmgl") as JsonObject
@@ -56,6 +60,10 @@ class FareRules(
                 ints(n["stations"]), ints(n["fares"]),
                 f.mapValues { (_, v) ->
                     v != null && v !is JsonNull && (v as JsonObject)["verified"]?.jsonPrimitive?.boolean == true
+                },
+                (d["overrides"] as? JsonArray).orEmpty().associate {
+                    val t = (it as JsonArray).map { n -> n.jsonPrimitive.int }
+                    pairKey(t[0], t[1]) to t[2]
                 },
             )
         }
@@ -104,6 +112,13 @@ object Fares {
         return table[slab]
     }
 
+    /** DMRC's own fare where it departs from the distance slab (Magenta Line pairs), otherwise the distance fare. */
+    fun dmrc(net: Network, from: Station, to: Station, day: FareDay): Int {
+        val slab = net.fares.dmrcOverrides[FareRules.pairKey(from.index, to.index)]
+            ?: return dmrc(net.fares, shortestKm(net, from, to), day)
+        return (if (day == FareDay.Sunday) net.fares.dmrcSunday else net.fares.dmrcWeekday)[slab]
+    }
+
     fun rapid(rules: FareRules, from: Station, to: Station): Int {
         fun inPhase1(s: Station) = s.name in rules.rapidPhase1
         fun inPhase2(s: Station) = s.name !in rules.rapidPhase1 || s.name == "Sikanderpur"
@@ -131,7 +146,7 @@ object Fares {
             val from = legs[i].from
             val to = legs[j].to
             val amount: Int? = when (system) {
-                "dmrc" -> dmrc(net.fares, shortestKm(net, from, to), day)
+                "dmrc" -> dmrc(net, from, to, day)
                 "rmgl" -> rapid(net.fares, from, to)
                 "nmrc" -> aqua(net.fares, (i..j).sumOf { legs[it].hops })
                 else -> null

@@ -27,10 +27,13 @@ object Shortcuts {
         val list = places.toList()
         val signature = "v1|" + list.joinToString("|") { "${it.label}>${it.stationId}" }
         worker.execute {
-            val prefs = app.getSharedPreferences("shortcuts", Context.MODE_PRIVATE)
-            if (prefs.getString("published", null) == signature) return@execute
-            publish(app, net, list)
-            prefs.edit().putString("published", signature).apply()
+            // A launcher that rejects a shortcut must never take the app down: this runs on a background thread.
+            runCatching {
+                val prefs = app.getSharedPreferences("shortcuts", Context.MODE_PRIVATE)
+                if (prefs.getString("published", null) == signature) return@runCatching
+                publish(app, net, list)
+                prefs.edit().putString("published", signature).apply()
+            }
         }
     }
 

@@ -9,14 +9,14 @@ plugins {
 
 android {
     namespace = "app.metroline"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "app.metroline"
         minSdk = 26
-        targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        targetSdk = 36
+        versionCode = 2
+        versionName = "1.1"
     }
 
     val keystoreFile = rootProject.file("keystore.properties")
@@ -59,6 +59,10 @@ android {
     }
     sourceSets["test"].resources.srcDir("src/main/assets")
     testOptions.unitTests.isIncludeAndroidResources = true
+    // The Compose UI tests launch a test activity that only the debug manifest declares.
+    testOptions.unitTests.all { test ->
+        if (test.name == "testReleaseUnitTest") test.exclude("**/ui/PickerScreenTest*")
+    }
 }
 
 dependencies {
@@ -76,5 +80,5 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     testImplementation(composeBom)
     testImplementation("androidx.compose.ui:ui-test-junit4")
-    testImplementation("org.robolectric:robolectric:4.14.1")
+    testImplementation("org.robolectric:robolectric:4.16.1")
 }

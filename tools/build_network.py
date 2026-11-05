@@ -1,4 +1,5 @@
 import csv
+import heapq
 import json
 import math
 import pathlib
@@ -7,6 +8,7 @@ import re
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 RAW = ROOT / "tools" / "raw" / "osm.json"
 PLATFORMS = ROOT / "tools" / "raw" / "platforms.csv"
+HOP_KM = ROOT / "tools" / "raw" / "hop_km.csv"  # DMRC's own distance between neighbouring stations; optional
 OUT = ROOT / "app" / "src" / "main" / "assets" / "network.json"
 
 PATTERNS = {
@@ -168,6 +170,65 @@ FARES = {
 }
 
 
+FARE_TABLE = ROOT / "tools" / "raw" / "dmrc_fares.csv"  # DMRC's own fare for each station pair; optional
+
+# The Magenta Line extension is newer than DMRC's fare table, so pairs whose shortest path uses it keep the distance fare.
+MAGENTA_EXTENSION = ["dmrc:Majlis Park", "dmrc:Bhalaswa", "dmrc:Haiderpur Badli Mor", "dmrc:Haiderpur Village",
+                     "dmrc:North Pitampura - Prashant Vihar", "dmrc:Madhuban Chowk", "dmrc:Deepali Chowk"]
+
+
+def fare_overrides(ordered, patterns):
+    """[i, j, slab] for station pairs where DMRC's fare differs from the one its distance slab gives.
+
+    Magenta Line fares don't follow the route distance (19.4 km already costs the 21 to 32 km fare), so for those
+    pairs the table is used as is. i < j are indexes into the station list.
+    """
+    if not FARE_TABLE.exists():
+        return []
+    slabs = FARES["dmrc"]["slabs_km"]
+    weekday = FARES["dmrc"]["weekday"]
+    index = {s["id"]: i for i, s in enumerate(ordered)}
+    system = {l[0]: l[4] for l in LINES}
+    adj = {}
+    for p in patterns:
+        if system[p["line"]] != "dmrc":
+            continue
+        for k in range(len(p["stops"]) - 1):
+            adj.setdefault(p["stops"][k], []).append((p["stops"][k + 1], p["km"][k]))
+    extension = {(a, b) for a, b in zip(MAGENTA_EXTENSION, MAGENTA_EXTENSION[1:])}
+    extension |= {(b, a) for a, b in extension}
+
+    def shortest(src, skip):
+        dist, queue = {src: 0.0}, [(0.0, src)]
+        while queue:
+            d, u = heapq.heappop(queue)
+            if d > dist[u]:
+                continue
+            for v, w in adj.get(u, []):
+                if (u, v) not in skip and d + w < dist.get(v, math.inf):
+                    dist[v] = d + w
+                    heapq.heappush(queue, (dist[v], v))
+        return dist
+
+    def slab(distance):
+        return next((i for i, limit in enumerate(slabs) if distance <= limit), len(slabs))
+
+    table = {}
+    with FARE_TABLE.open(newline="") as f:
+        for r in csv.DictReader(f):
+            table[(r["from"], r["to"])] = weekday.index(int(r["fare"]))
+    out = {}
+    for a in adj:
+        full, without = shortest(a, set()), shortest(a, extension)
+        for b, d in full.items():
+            if (a, b) not in table or slab(d) == table[(a, b)]:
+                continue
+            if without.get(b, math.inf) > d + 1e-6:
+                continue  # the path uses the newer extension, which the table predates
+            out[(min(index[a], index[b]), max(index[a], index[b]))] = table[(a, b)]
+    return sorted([i, j, slab] for (i, j), slab in out.items())
+
+
 def clean(name):
     name = re.sub(r"\s*\((Yellow|Red|Blue|Green|Violet|Pink|Magenta|Grey) Line\)\s*$", "", name)
     return RENAME.get(name, name)
@@ -229,14 +290,21 @@ def add_platforms(stations, patterns):
                     ahead_all += q["stops"][1:]
         platforms, dirs = [], []
         for i, sid in enumerate(stops):
-            # Platform per direction, so a leg can pick the platform that serves where it gets off.
-            dirs.append([{"p": n, "t": named} for _, n, named in rows.get((sid, line), []) if named])
-            if i == len(stops) - 1 or (line, name[sid], name[stops[i + 1]]) in NO_PLATFORM:
-                platforms.append([])
-                continue
             pos = {}
             for k, t in enumerate(ahead_all[i + 1:]):
                 pos.setdefault(t, k)
+            # Platform per direction, so a leg can pick the platform that serves where it gets off.
+            # A platform whose destinations are all behind us in this pattern faces the other way round a loop
+            # (the Pink Line ring), so leave it out: otherwise a ring station it names picks it although the
+            # train is heading the other way. Destinations missing from the pattern don't count as behind: a
+            # leg can carry on into another pattern of the line (Kirti Nagar to Brigadier Hoshiyar Singh).
+            behind = set(stops[:i])
+            dirs.append([{"p": n, "t": named} for towards, n, named in rows.get((sid, line), [])
+                         if named and not (i < len(stops) - 1 and towards
+                                           and all(t in behind and t not in pos for t in towards))])
+            if i == len(stops) - 1 or (line, name[sid], name[stops[i + 1]]) in NO_PLATFORM:
+                platforms.append([])
+                continue
             # Prefer a platform whose first-named destination is ahead, then the nearest one.
             ranked = [(min((k > 0, pos[t]) for k, t in enumerate(towards) if t in pos), n)
                       for towards, n, _ in rows.get((sid, line), []) if any(t in pos for t in towards)]
@@ -292,6 +360,14 @@ def main():
         stations[sid]["lat"] = round(sum(p[0] for p in pts) / len(pts), 6)
         stations[sid]["lon"] = round(sum(p[1] for p in pts) / len(pts), 6)
 
+    # Delhi Metro fares are slabs of the shortest distance, so use DMRC's own distance for each hop where we have it.
+    # Times keep using the map estimate: the speeds above were calibrated against it.
+    official_km = {}
+    if HOP_KM.exists():
+        with HOP_KM.open(newline="") as f:
+            for r in csv.DictReader(f):
+                official_km[(r["from"], r["to"])] = float(r["km"])
+
     for p in patterns:
         system = SYSTEM_OF_LINE[p["line"]]
         dwell, speed = TIME[system]
@@ -299,7 +375,7 @@ def main():
         for a, b in zip(p["stops"], p["stops"][1:]):
             d = km((stations[a]["lat"], stations[a]["lon"]), (stations[b]["lat"], stations[b]["lon"]))
             d *= 1.06
-            hops_km.append(round(d, 3))
+            hops_km.append(round(official_km.get((a, b), d), 3))
             hops_min.append(round(dwell + d / speed * 60, 2))
         p["km"] = hops_km
         p["min"] = hops_min
@@ -313,15 +389,18 @@ def main():
         stations[sid]["aliases"] = names
     add_platforms(stations, patterns)
 
+    ordered = sorted(stations.values(), key=lambda s: (s["name"].lower(), s["system"]))
+    fares = {**FARES, "dmrc": {**FARES["dmrc"], "overrides": fare_overrides(ordered, patterns)}}
+
     out = {
         "version": raw["osm3s"]["timestamp_osm_base"][:10],
         "source": "OpenStreetMap contributors (ODbL)",
         "lines": [{"id": i, "name": n, "short": s, "color": c, "system": y} for i, n, s, c, y in LINES],
-        "stations": sorted(stations.values(), key=lambda s: (s["name"].lower(), s["system"])),
+        "stations": ordered,
         "patterns": patterns,
         "walks": [{"a": a, "b": b, "min": m} for a, b, m in WALKS],
         "interchange": {"default": INTERCHANGE_DEFAULT, "at": INTERCHANGE},
-        "fares": FARES,
+        "fares": fares,
     }
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")))

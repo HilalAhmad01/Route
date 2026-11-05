@@ -53,6 +53,10 @@ Thumbs.db
 # Project-specific
 engagements/
 
-# DMRC platform table (licensing pending; not for publication)
+# DMRC platform table and station distances (licensing pending; not for publication)
 delhi_metro_platforms_table.csv
 tools/raw/platforms.csv
+tools/raw/hop_km.csv
+tools/raw/dmrc_fares.csv
+# Screenshots, UI dumps and reports from checking the data against the official app
+tools/raw/capture/

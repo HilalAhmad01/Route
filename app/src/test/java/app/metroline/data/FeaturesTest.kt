@@ -95,22 +95,86 @@ class FeaturesTest {
     }
 
     @Test fun platformFollowsWhereTheLegGetsOff() {
-        val toMaujpur = route("dmrc:Majlis Park", "dmrc:Maujpur - Babarpur").legs.single()
-        assertEquals("Platform No. 1", toMaujpur.platform)
-        assertEquals("Maujpur - Babarpur", toMaujpur.towards)
+        // Both shown by the official app from Yamuna Bank: Vaishali trains leave platform 3, Noida trains platform 1.
+        val toVaishali = route("dmrc:Yamuna Bank", "dmrc:Vaishali").legs.single()
+        assertEquals("Platform No. 3", toVaishali.platform)
+        assertEquals("Vaishali", toVaishali.towards)
 
-        val toYamuna = route("dmrc:Majlis Park", "dmrc:Yamuna Vihar").legs.single()
-        assertEquals("Platform No. 2", toYamuna.platform)
-        assertEquals("Yamuna Vihar", toYamuna.towards)
+        val toNoida = route("dmrc:Yamuna Bank", "dmrc:Noida Electronic City").legs.single()
+        assertEquals("Platform No. 1", toNoida.platform)
+        assertEquals("Noida Electronic City", toNoida.towards)
     }
 
     @Test fun legsShowPlatforms() {
         val j = route("dmrc:Adarsh Nagar", "nmrc:Knowledge Park II")
         assertEquals(listOf("Platform No. 1", "Platform No. 3", null), j.legs.map { it.platform })
 
-        // Westbound trains at Yamuna Bank use platform 2 or 4; only one is shown, so show none.
+        // Westbound from Yamuna Bank the official app shows platform 2 only.
         val westFromYamunaBank = route("dmrc:Yamuna Bank", "dmrc:Mandi House")
-        assertEquals(listOf(2, 4), westFromYamunaBank.legs.single().platforms)
-        assertEquals(null, westFromYamunaBank.legs.single().platform)
+        assertEquals(listOf(2), westFromYamunaBank.legs.single().platforms)
+        assertEquals("Platform No. 2", westFromYamunaBank.legs.single().platform)
+    }
+
+    // Checked against the official app: the platform table had these directions swapped or missing.
+    @Test fun magentaPlatformsAtJanakpuriWestAndSukhdevVihar() {
+        // Botanical Garden is also a direct Blue Line ride from Janakpuri West, so go to a Magenta-only stop on the same side.
+        assertEquals("Platform No. 3", route("dmrc:Janakpuri West", "dmrc:Dabri Mor - Janakpuri South").legs.single().platform)
+        assertEquals("Platform No. 4", route("dmrc:Janakpuri West", "dmrc:Krishna Park Extension").legs.single().platform)
+        assertEquals("Platform No. 1", route("dmrc:Sukhdev Vihar", "dmrc:Botanical Garden").legs.single().platform)
+        assertEquals("Platform No. 2", route("dmrc:Sukhdev Vihar", "dmrc:Janakpuri West").legs.single().platform)
+    }
+
+    @Test fun welcomeHasBothPinkLinePlatforms() {
+        assertEquals("Platform No. 3", route("dmrc:Welcome", "dmrc:Maujpur - Babarpur").legs.single().platform)
+        assertEquals("Platform No. 4", route("dmrc:Welcome", "dmrc:East Azad Nagar").legs.single().platform)
+    }
+
+    // Shown by the official app. Yamuna Vihar and Majlis Park are reached from Jaffrabad via Maujpur on the
+    // eastbound platform, although the table also names them for the platform facing the other way round the ring.
+    @Test fun pinkLinePlatformFollowsTheDirectionOfTravel() {
+        assertEquals("Platform No. 1", route("dmrc:Jaffrabad", "dmrc:Maujpur - Babarpur").legs.single().platform)
+        assertEquals("Platform No. 1", route("dmrc:Jaffrabad", "dmrc:Yamuna Vihar").legs.single().platform)
+        assertEquals("Platform No. 1", route("dmrc:Jaffrabad", "dmrc:Majlis Park").legs.single().platform)
+        assertEquals("Platform No. 4", route("dmrc:Azadpur", "dmrc:Burari").legs.single().platform)
+        assertEquals("Platform No. 3", route("dmrc:Maujpur - Babarpur", "dmrc:Shiv Vihar").legs.single().platform)
+    }
+
+    // Every platform below is what the official app shows for that trip.
+    @Test fun platformsMatchTheOfficialApp() {
+        fun platform(a: String, b: String, airport: Boolean = false) =
+            requireNotNull(router.route(net.station(a), net.station(b), RouteMode.Fastest, airport)).legs.first().platform
+        assertEquals("Platform No. 1 & 3", platform("dmrc:Dwarka - Kakrola", "dmrc:Rajouri Garden"))
+        assertEquals("Platform No. 1", platform("dmrc:Dwarka Sector 21", "dmrc:Janakpuri West"))
+        assertEquals("Platform No. 3", platform("dmrc:Dwarka Sector 21", "dmrc:Delhi Aerocity", airport = true))
+        assertEquals("Platform No. 1", platform("dmrc:New Delhi", "dmrc:Delhi Aerocity", airport = true))
+        assertEquals("Platform No. 2", platform("dmrc:Yamuna Bank", "dmrc:Rajiv Chowk"))
+        assertEquals("Platform No. 2", platform("dmrc:Mundka", "dmrc:Nangloi"))
+        assertEquals("Platform No. 3", platform("dmrc:Inderlok", "dmrc:Ashok Park Main"))
+        assertEquals("Platform No. 3", platform("dmrc:Kirti Nagar", "dmrc:Inderlok"))
+        assertEquals("Platform No. 1", platform("dmrc:Jasola Vihar Shaheen Bagh", "dmrc:Kalindi Kunj"))
+        assertEquals("Platform No. 1", platform("dmrc:Old Faridabad", "dmrc:Bata Chowk"))
+    }
+
+    // Every fare below is what the official app charges. Magenta Line fares don't follow the route distance
+    // (Vasant Vihar to Botanical Garden is 20.7 km but costs the 21 to 32 km fare), and Rithala to Haiderpur Badli Mor
+    // is cheaper than the older fare table says because the Magenta extension now shortens it.
+    @Test fun delhiMetroFaresMatchTheOfficialApp() {
+        fun fare(a: String, b: String) =
+            Fares.quote(net, route("dmrc:$a", "dmrc:$b"), FareContext(FareDay.Weekday)).tokenTotal
+        assertEquals(54, fare("Vasant Vihar", "Botanical Garden"))
+        assertEquals(54, fare("Chirag Delhi", "IP Extension"))
+        assertEquals(54, fare("Dashrath Puri", "Nehru Place"))
+        assertEquals(64, fare("Jasola Apollo", "Dwarka Mor"))
+        assertEquals(64, fare("Dwarka Sector 10", "Malviya Nagar"))
+        assertEquals(64, fare("Mewala Maharajpur", "Guru Dronacharya"))
+        assertEquals(32, fare("Rithala", "Haiderpur Badli Mor"))
+    }
+
+    // Shown by the official app. The leg starts on the Kirti Nagar branch and carries on to the main line.
+    @Test fun kirtiNagarGreenLinePlatform() {
+        assertEquals("Platform No. 3", route("dmrc:Kirti Nagar", "dmrc:Brigadier Hoshiyar Singh").legs.single().platform)
+        // Every Green Line train leaves Kirti Nagar the same way, so the platform is the same for stops along the way.
+        assertEquals("Platform No. 3", route("dmrc:Kirti Nagar", "dmrc:Nangloi").legs.single().platform)
+        assertEquals("Platform No. 3", route("dmrc:Kirti Nagar", "dmrc:Mundka").legs.single().platform)
     }
 }

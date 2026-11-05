@@ -121,9 +121,15 @@ fun AboutScreen() {
         Block(
             "Times and fares",
             "Travel times are estimated from track distance, calibrated against the official app. " +
-                "Delhi Metro fares follow the published distance slabs, token prices. " +
+                "Delhi Metro fares follow the published distance slabs, token prices, with the official fare " +
+                "where it differs (some Magenta Line trips). " +
                 "Fares marked ≈ (Rapid Metro across phases, Noida Metro) are not yet confirmed. " +
                 "Airport Express and Namo Bharat fares are not included.",
+        )
+        Block(
+            "Platforms",
+            "Platform numbers are shown where the official DMRC app shows them. Some stations, " +
+                "Noida Metro and Namo Bharat have none, and where several platforms can serve a train all are listed.",
         )
         Block(
             "Tickets",

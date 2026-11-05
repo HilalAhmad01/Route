@@ -22,8 +22,8 @@ class Leg(
     val hops get() = stations.size - 1
 
     val direction get() = if (towards.isNotEmpty()) "towards $towards" else "next stop ${stations[1].name}"
-    /** Shown only when one platform serves the leg; none when trains leave from several. */
-    val platform get() = platforms.singleOrNull()?.let { "Platform No. $it" }
+    /** Worded as the official app does: "Platform No. 2", or "Platform No. 1 & 3" when trains leave from either. */
+    val platform get() = platforms.takeIf { it.isNotEmpty() }?.joinToString(" & ", "Platform No. ")
 }
 
 class EndWalk(val station: Station, val minutes: Int)
