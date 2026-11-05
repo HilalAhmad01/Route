@@ -89,7 +89,7 @@ the Console offers two choices:
 
 ## Before the first upload
 
-- [ ] Resolve the DMRC data licensing question (platform numbers, fare overrides, per-hop distances)
+- [x] DMRC data licensing question (platform numbers, fare overrides, per-hop distances): cleared by Hilal, 2026-11-05
 - [ ] Push `PRIVACY.md` so the policy URL resolves
 - [ ] Upload `dist/Route-1.1.aab` (built from git tag `v1.1`)
 - [ ] Personal accounts created after 2023-11-13: run a closed test with 12 testers for 14 days
