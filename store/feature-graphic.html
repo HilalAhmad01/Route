@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face { font-family: "Plex"; src: url("../tools/raw/fonts/plex_sans.ttf"); font-weight: 100 700; }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 1024px; height: 500px; overflow: hidden; background: #0C0C0D; }
+  body { position: relative; font-family: "Plex", sans-serif; color: #EDEDED; }
+  .brand { position: absolute; left: 64px; top: 56px; display: flex; align-items: center; gap: 14px; font-size: 40px; font-weight: 500; letter-spacing: -0.01em; }
+  .brand svg { width: 44px; height: 44px; }
+  h1 { position: absolute; left: 64px; top: 168px; width: 480px; font-size: 54px; line-height: 1.08; font-weight: 500; letter-spacing: -0.02em; }
+  p { position: absolute; left: 64px; top: 360px; font-size: 25px; font-weight: 400; color: #9A9EA6; }
+  .stripes { position: absolute; left: 0; right: 0; top: 214px; }
+  .stripes i { position: absolute; height: 9px; right: 0; border-radius: 0; }
+  .phone { position: absolute; left: 618px; top: 66px; width: 360px; height: 434px; overflow: hidden; }
+  .phone img { width: 360px; display: block; margin-top: -360px; margin-left: -90px; width: 540px; }
+</style>
+</head>
+<body>
+  <div class="stripes">
+    <i style="top:0;    left:560px; background:#FFD600"></i>
+    <i style="top:13px; left:590px; background:#2F6FE4"></i>
+    <i style="top:26px; left:540px; background:#C2338B"></i>
+    <i style="top:39px; left:610px; background:#F27BA6"></i>
+    <i style="top:52px; left:575px; background:#E53935"></i>
+    <i style="top:65px; left:595px; background:#2E9D4F"></i>
+    <i style="top:78px; left:550px; background:#7E4DB8"></i>
+    <i style="top:91px; left:605px; background:#21B6C4"></i>
+    <i style="top:104px; left:585px; background:#F28C28"></i>
+  </div>
+  <div class="phone"><img src="../docs/screenshots/01-routes-in-seconds.png" alt=""></div>
+  <div class="brand">
+    <svg viewBox="26 30 60 52" aria-hidden="true">
+      <path d="M36,72L36,54Q36,44 46,44L72,44" fill="none" stroke="#EDEDED" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="36" cy="72" r="5" fill="#EDEDED"/>
+      <circle cx="72" cy="44" r="6" fill="#0C0C0D" stroke="#EDEDED" stroke-width="4"/>
+    </svg>
+    Route
+  </div>
+  <h1>Delhi NCR metro routes in seconds.</h1>
+  <p>Offline. No login. No ads.</p>
+</body>
+</html>
