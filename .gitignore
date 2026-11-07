@@ -60,3 +60,5 @@ tools/raw/hop_km.csv
 tools/raw/dmrc_fares.csv
 # Screenshots, UI dumps and reports from checking the data against the official app
 tools/raw/capture/
+# Official DMRC/NMRC/NCRTC network map (reference only, not for publication)
+DMRC-NMRC-and-NCRTC-MAP-*.pdf

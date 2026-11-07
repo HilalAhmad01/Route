@@ -72,3 +72,15 @@ object WhatsAppTicket {
         Toast.makeText(context, "WhatsApp is needed to book tickets", Toast.LENGTH_SHORT).show()
     }
 }
+
+object PrivacyPolicy {
+    const val URL = "https://github.com/HilalAhmad01/Route/blob/main/PRIVACY.md"
+
+    fun open(context: Context) {
+        try {
+            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(URL)))
+        } catch (_: ActivityNotFoundException) {
+            Toast.makeText(context, "No browser found. The policy is at $URL", Toast.LENGTH_LONG).show()
+        }
+    }
+}

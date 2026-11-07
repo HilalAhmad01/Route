@@ -52,7 +52,7 @@ class RouterTest {
 
     @Test fun fewestChangesNeverHasMoreChanges() {
         val ids = listOf("dmrc:Rithala", "dmrc:Noida Electronic City", "dmrc:Botanical Garden", "dmrc:Shiv Vihar",
-            "nmrc:Depot", "rmgl:Sector 55-56", "dmrc:Dhansa Bus Stand", "dmrc:Raja Nahar Singh", "rrts:Modipuram")
+            "nmrc:Depot Station", "rmgl:Sector 55-56", "dmrc:Dhansa Bus Stand", "dmrc:Raja Nahar Singh", "rrts:Modipuram")
         for (a in ids) for (b in ids) if (a != b) {
             val f = router.route(st(a), st(b), RouteMode.Fastest, false)!!
             val c = router.route(st(a), st(b), RouteMode.FewestChanges, false)!!

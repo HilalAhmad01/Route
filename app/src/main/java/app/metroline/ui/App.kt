@@ -120,15 +120,23 @@ fun App(net: Network, store: Store, nav: Nav, finish: () -> Unit) {
     CompositionLocalProvider(LocalDeps provides deps) {
         Box(Modifier.fillMaxSize().background(C.bg).statusBarsPadding().imePadding()) {
             AnimatedContent(
-                targetState = nav.top to nav.tab,
+                targetState = nav.top,
                 transitionSpec = {
                     (fadeIn(enter()) + slideInVertically(enter()) { 24 }) togetherWith fadeOut(quick())
                 },
                 label = "screen",
-            ) { (screen, tab) ->
+            ) { screen ->
                 when (screen) {
+                    // Only the tab's content animates; the tab bar stays put while switching tabs.
                     Screen.Home -> Column(Modifier.fillMaxSize()) {
-                        Box(Modifier.weight(1f)) {
+                        AnimatedContent(
+                            targetState = nav.tab,
+                            transitionSpec = {
+                                (fadeIn(enter()) + slideInVertically(enter()) { 24 }) togetherWith fadeOut(quick())
+                            },
+                            modifier = Modifier.weight(1f),
+                            label = "tab",
+                        ) { tab ->
                             when (tab) {
                                 Tab.Plan -> PlanScreen()
                                 Tab.Map -> MapScreen()
@@ -136,7 +144,7 @@ fun App(net: Network, store: Store, nav: Nav, finish: () -> Unit) {
                                 Tab.Saved -> SavedScreen()
                             }
                         }
-                        TabBar(tab) { nav.tab = it }
+                        TabBar(nav.tab) { nav.tab = it }
                     }
                     is Screen.Route -> Column(Modifier.fillMaxSize().navBars()) { RouteScreen(screen.trip) }
                     is Screen.Pick -> Column(Modifier.fillMaxSize().navBars()) { PickerScreen(screen.target) }

@@ -27,6 +27,36 @@ class FeaturesTest {
             "pragati maidan" to "Supreme Court",
             "T3" to "IGI Airport",
             "nizamuddin" to "Sarai Kale Khan - Nizamuddin",
+            "rohini west" to "Dr. Baba Saheb Ambedkar Hospital",
+            "rohini east" to "Rohini",
+            "ambedkar hospital" to "Dr. Baba Saheb Ambedkar Hospital",
+            "uttari pitampura" to "Uttari Pitampura - Prashant Vihar",
+            "prashant vihar" to "Uttari Pitampura - Prashant Vihar",
+            "north pitampura" to "Uttari Pitampura - Prashant Vihar",
+            "badarpur border" to "Badarpur Border",
+            "badarpur" to "Badarpur Border",
+            "badkal mor" to "Badkal Mor",
+            "badhkal mor" to "Badkal Mor",
+            "guru teg bahadur nagar" to "Guru Teg Bahadur Nagar",
+            "gtb nagar" to "Guru Teg Bahadur Nagar",
+            "jafrabad" to "Jafrabad",
+            "jaffrabad" to "Jafrabad",
+            "barakhamba road" to "Barakhamba Road",
+            "barakhambha road" to "Barakhamba Road",
+            "major mohit sharma rajendra nagar" to "Major Mohit Sharma Rajendra Nagar",
+            "rajendra nagar" to "Major Mohit Sharma Rajendra Nagar",
+            "tughlakabad station" to "Tughlakabad Station",
+            "tughlakabad" to "Tughlakabad Station",
+            "depot station" to "Depot Station",
+            "depot" to "Depot Station",
+            "brig. hoshiar singh" to "Brig. Hoshiar Singh",
+            "brigadier hoshiyar singh" to "Brig. Hoshiar Singh",
+            "ghevra metro station" to "Ghevra Metro Station",
+            "ghevra" to "Ghevra Metro Station",
+            "jln stadium" to "JLN Stadium",
+            "jawaharlal nehru stadium" to "JLN Stadium",
+            "maharaja surajmal stadium" to "Maharaja Surajmal Stadium",
+            "surajmal stadium" to "Maharaja Surajmal Stadium",
         )
         for ((q, name) in cases) assertEquals(q, name, top(q).station.name)
     }
@@ -86,7 +116,7 @@ class FeaturesTest {
     @Test fun shareTextHandlesWalksBetweenOperators() {
         val noida = route("dmrc:Adarsh Nagar", "nmrc:Knowledge Park II")
         val t1 = ShareText.of(noida, Fares.quote(net, noida, FareContext(FareDay.Weekday)))
-        assertTrue(t1, "Walk to Noida Sector 51 (10 min), then Aqua Line towards Depot, 15 stops to Knowledge Park II" in t1)
+        assertTrue(t1, "Walk to Noida Sector 51 (10 min), then Aqua Line towards Depot Station, 15 stops to Knowledge Park II" in t1)
 
         val rapid = route("dmrc:Adarsh Nagar", "rmgl:DLF Phase 3")
         val t2 = ShareText.of(rapid, Fares.quote(net, rapid, FareContext(FareDay.Weekday)))
@@ -129,12 +159,12 @@ class FeaturesTest {
         assertEquals("Platform No. 4", route("dmrc:Welcome", "dmrc:East Azad Nagar").legs.single().platform)
     }
 
-    // Shown by the official app. Yamuna Vihar and Majlis Park are reached from Jaffrabad via Maujpur on the
+    // Shown by the official app. Yamuna Vihar and Majlis Park are reached from Jafrabad via Maujpur on the
     // eastbound platform, although the table also names them for the platform facing the other way round the ring.
     @Test fun pinkLinePlatformFollowsTheDirectionOfTravel() {
-        assertEquals("Platform No. 1", route("dmrc:Jaffrabad", "dmrc:Maujpur - Babarpur").legs.single().platform)
-        assertEquals("Platform No. 1", route("dmrc:Jaffrabad", "dmrc:Yamuna Vihar").legs.single().platform)
-        assertEquals("Platform No. 1", route("dmrc:Jaffrabad", "dmrc:Majlis Park").legs.single().platform)
+        assertEquals("Platform No. 1", route("dmrc:Jafrabad", "dmrc:Maujpur - Babarpur").legs.single().platform)
+        assertEquals("Platform No. 1", route("dmrc:Jafrabad", "dmrc:Yamuna Vihar").legs.single().platform)
+        assertEquals("Platform No. 1", route("dmrc:Jafrabad", "dmrc:Majlis Park").legs.single().platform)
         assertEquals("Platform No. 4", route("dmrc:Azadpur", "dmrc:Burari").legs.single().platform)
         assertEquals("Platform No. 3", route("dmrc:Maujpur - Babarpur", "dmrc:Shiv Vihar").legs.single().platform)
     }
@@ -170,9 +200,31 @@ class FeaturesTest {
         assertEquals(32, fare("Rithala", "Haiderpur Badli Mor"))
     }
 
+    // The official app treats Ghaziabad (Namo Bharat) and Shaheed Sthal (New Bus Adda) as one station.
+    // Namo Bharat has its own ticket and no fare here, so a Delhi Metro trip is never sent over it, even where it is quicker.
+    @Test fun delhiMetroTripsStayOffNamoBharat() {
+        for ((a, b) in listOf("dmrc:AIIMS" to "dmrc:Shaheed Sthal", "dmrc:Anand Vihar" to "dmrc:Shaheed Sthal", "dmrc:Akshardham" to "dmrc:Arthala")) {
+            val options = router.options(net.station(a), net.station(b), allowAirport = false)
+            assertTrue("$a -> $b", options.isNotEmpty())
+            for ((_, j) in options) assertTrue("$a -> $b uses Namo Bharat", j.legs.none { it.line.system == "rrts" })
+        }
+        // A trip that starts or ends on Namo Bharat still uses it, through the Ghaziabad link.
+        val toDelhi = router.options(net.station("rrts:Sahibabad"), net.station("dmrc:Dilshad Garden"), allowAirport = false)
+        assertEquals(listOf("rrts", "red"), toDelhi.getValue(RouteMode.Fastest).legs.map { it.line.id })
+    }
+
+    @Test fun ghaziabadConnectsToTheRedLine() {
+        val j = route("rrts:Sahibabad", "dmrc:Dilshad Garden")
+        assertEquals(listOf("rrts", "red"), j.legs.map { it.line.id })
+        assertEquals("Ghaziabad", j.legs[0].to.name)
+        assertEquals("Shaheed Sthal", j.legs[1].from.name)
+        assertTrue(j.legs[1].boardedByWalk)
+        assertEquals(listOf("rrts", "red"), route("dmrc:Dilshad Garden", "rrts:Murad Nagar").legs.map { it.line.id }.reversed())
+    }
+
     // Shown by the official app. The leg starts on the Kirti Nagar branch and carries on to the main line.
     @Test fun kirtiNagarGreenLinePlatform() {
-        assertEquals("Platform No. 3", route("dmrc:Kirti Nagar", "dmrc:Brigadier Hoshiyar Singh").legs.single().platform)
+        assertEquals("Platform No. 3", route("dmrc:Kirti Nagar", "dmrc:Brig. Hoshiar Singh").legs.single().platform)
         // Every Green Line train leaves Kirti Nagar the same way, so the platform is the same for stops along the way.
         assertEquals("Platform No. 3", route("dmrc:Kirti Nagar", "dmrc:Nangloi").legs.single().platform)
         assertEquals("Platform No. 3", route("dmrc:Kirti Nagar", "dmrc:Mundka").legs.single().platform)

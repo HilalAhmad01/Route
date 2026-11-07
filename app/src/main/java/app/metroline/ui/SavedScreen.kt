@@ -134,16 +134,28 @@ fun AboutScreen() {
         Block(
             "Tickets",
             "\"Book ticket on WhatsApp\" opens DMRC's official WhatsApp ticketing (+91 96508 55800) with \"Hi\" typed in. " +
-                "Stations and payment are handled there by DMRC; this app never sees them. " +
+                "Booking, payment and the ticket itself are handled entirely by DMRC, and Route never sees any of it. " +
                 "Covers Delhi Metro, Airport Express and Rapid Metro, not Noida Metro or Namo Bharat.",
         )
-        Block("Not affiliated", "This app is not made by or affiliated with DMRC, NMRC, NCRTC or Rapid Metro.")
-        Block(
-            "Credits",
-            "Design direction: unslop by Damir Sokolovsky (@heydamir), CC BY 4.0, github.com/heydamir/unslop. " +
-                "Icons: Lucide, ISC licence. Type: IBM Plex Sans and Plex Mono, SIL Open Font Licence. " +
-                "Map data © OpenStreetMap contributors, ODbL.",
+        Spacer(Modifier.height(8.dp))
+        Text(
+            "Any discrepancy in a ticket or payment should be raised with DMRC; Route is not party to the transaction " +
+                "and bears no responsibility for it.",
+            style = T.secondary.copy(color = C.muted),
         )
+        Block(
+            "Privacy",
+            "Route collects nothing and sends nothing: it has no internet access. " +
+                "Bookmarks and trips never leave this phone.",
+        )
+        Row(
+            Modifier.fillMaxWidth().padding(top = 4.dp).heightIn(min = 48.dp).press({ PrivacyPolicy.open(ctx) }),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text("Read the privacy policy", style = T.body.copy(color = C.text2), modifier = Modifier.weight(1f))
+            Ic(R.drawable.ic_chevron_right, C.muted, 16.dp)
+        }
+        Block("Not affiliated", "This app is not made by or affiliated with DMRC, NMRC, NCRTC or Rapid Metro.")
         Spacer(Modifier.height(32.dp))
     }
 }

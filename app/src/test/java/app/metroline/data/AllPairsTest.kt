@@ -43,7 +43,13 @@ class AllPairsTest {
                         val joined = if (leg.boardedByWalk) (prev.index to leg.from.index) in walkPairs else prev == leg.from
                         if (!joined) bad(a, b, "$label leg $k: starts at ${leg.from.id} after ${prev.id}")
                         if (!leg.boardedByWalk && prev.lines.none { it in leg.from.lines }) bad(a, b, "$label leg $k: odd change")
-                        if (leg.line == j.legs[k - 1].line && !leg.boardedByWalk) bad(a, b, "$label leg $k: change to same line")
+                        // Same-line changes happen only where the app makes you change between a line's services:
+                        // Green Line <-> its Inderlok branch at Ashok Park Main, Noida <-> Vaishali trains at Yamuna Bank,
+                        // the Pink Line loop <-> its Shiv Vihar side at Maujpur - Babarpur.
+                        val greenBranch = (leg.line.id == "green" && leg.from.name == "Ashok Park Main") ||
+                            (leg.line.id == "blue" && leg.from.name == "Yamuna Bank") ||
+                            (leg.line.id == "pink" && leg.from.name == "Maujpur - Babarpur")
+                        if (leg.line == j.legs[k - 1].line && !leg.boardedByWalk && !greenBranch) bad(a, b, "$label leg $k: change to same line")
                     }
                 }
                 try {

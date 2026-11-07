@@ -43,6 +43,8 @@ class FareRules(
     val verified: Map<String, Boolean>,
     /** Station pairs (smaller index * 4096 + larger) whose DMRC fare isn't the one their distance gives, as a slab. */
     val dmrcOverrides: Map<Int, Int> = emptyMap(),
+    /** Rapid Metro stations that count as part of both sections (the cheaper fare to either side). */
+    val rapidShared: Set<String> = setOf("Sikanderpur"),
 ) {
     companion object {
         fun pairKey(a: Int, b: Int) = minOf(a, b) * 4096 + maxOf(a, b)
@@ -65,6 +67,7 @@ class FareRules(
                     val t = (it as JsonArray).map { n -> n.jsonPrimitive.int }
                     pairKey(t[0], t[1]) to t[2]
                 },
+                (r["shared"] as? JsonArray)?.map { it.jsonPrimitive.content }?.toSet() ?: setOf("Sikanderpur"),
             )
         }
     }
@@ -121,7 +124,7 @@ object Fares {
 
     fun rapid(rules: FareRules, from: Station, to: Station): Int {
         fun inPhase1(s: Station) = s.name in rules.rapidPhase1
-        fun inPhase2(s: Station) = s.name !in rules.rapidPhase1 || s.name == "Sikanderpur"
+        fun inPhase2(s: Station) = s.name !in rules.rapidPhase1 || s.name in rules.rapidShared
         val within = (inPhase1(from) && inPhase1(to)) || (inPhase2(from) && inPhase2(to))
         return if (within) rules.rapidWithin else rules.rapidAcross
     }

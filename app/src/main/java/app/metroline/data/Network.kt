@@ -27,6 +27,8 @@ data class PatternDto(
     val min: List<Double>,
     val platforms: List<List<Int>> = emptyList(),
     val dirs: List<List<PlatformDirDto>> = emptyList(),
+    /** Patterns of one line with different [service] numbers are separate services: riding on means changing trains. */
+    val service: Int = 0,
 )
 
 @Serializable
@@ -84,6 +86,8 @@ class Pattern(
     val platforms: List<List<Int>>,
     /** Per stop, each platform with the stations its trains go towards. */
     val dirs: List<List<PlatformDir>>,
+    /** Patterns of one line with different service numbers need a change of train between them. */
+    val service: Int = 0,
 ) {
     /**
      * The platform whose trains serve [exit], when exactly one does, preferring platforms that name
@@ -127,6 +131,7 @@ class Network(dto: NetworkDto) {
             p.km.toDoubleArray(), p.min.toDoubleArray(), p.platforms,
             p.dirs.ifEmpty { List(p.stops.size) { emptyList() } }
                 .map { stops -> stops.map { PlatformDir(it.p, it.t.map { t -> stationIndex.getValue(t) }.toSet()) } },
+            p.service,
         )
     }
     val walks: List<Walk> = dto.walks.map { Walk(stationIndex.getValue(it.a), stationIndex.getValue(it.b), it.min) }

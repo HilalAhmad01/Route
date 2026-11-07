@@ -62,13 +62,14 @@ class Router(private val net: Network) {
         return lo
     }
 
-    fun route(from: Station, to: Station, mode: RouteMode, allowAirport: Boolean): Journey? {
+    fun route(from: Station, to: Station, mode: RouteMode, allowAirport: Boolean, allowNamoBharat: Boolean = true): Journey? {
         if (from == to) return null
         net.walksFrom[from.index].firstOrNull { it.b == to.index }?.let {
             return Journey(from, to, emptyList(), endWalk = EndWalk(to, it.minutes))
         }
         val changePenalty = if (mode == RouteMode.FewestChanges) 1000.0 else 0.0
-        fun allowed(p: Pattern) = allowAirport || p.line.system != "dmrc_airport"
+        fun allowed(p: Pattern) =
+            (allowAirport || p.line.system != "dmrc_airport") && (allowNamoBharat || p.line.system != "rrts")
         fun boardable(p: Pattern, i: Int) = allowed(p) && i < p.stops.size - 1
 
         val finish = stateCount
@@ -119,7 +120,7 @@ class Router(private val net: Network) {
             for ((q, j) in net.occurrences[here]) {
                 val qp = net.patterns[q]
                 if (q == p || !boardable(qp, j)) continue
-                if (qp.line == pat.line) relax(state(q, j), 0.0, 3, 0)
+                if (qp.line == pat.line && qp.service == pat.service) relax(state(q, j), 0.0, 3, 0)
                 else relax(state(q, j), ic + changePenalty, 1, ic)
             }
             for (w in net.walksFrom[here]) for ((q, j) in net.occurrences[w.b]) {
@@ -181,9 +182,16 @@ class Router(private val net: Network) {
         return Journey(from, to, legs, startWalk, endWalk)
     }
 
+    /**
+     * Namo Bharat has its own ticket and no fare here, so it is only used when the trip starts or ends on it. The
+     * official app likewise never sends a Delhi Metro trip over it, even where it would be quicker.
+     */
+    fun allowsNamoBharat(from: Station, to: Station) = from.system == "rrts" || to.system == "rrts"
+
     fun options(from: Station, to: Station, allowAirport: Boolean): Map<RouteMode, Journey> {
-        val fast = route(from, to, RouteMode.Fastest, allowAirport) ?: return emptyMap()
-        val few = route(from, to, RouteMode.FewestChanges, allowAirport)
+        val namo = allowsNamoBharat(from, to)
+        val fast = route(from, to, RouteMode.Fastest, allowAirport, namo) ?: return emptyMap()
+        val few = route(from, to, RouteMode.FewestChanges, allowAirport, namo)
         return buildMap {
             put(RouteMode.Fastest, fast)
             if (few != null && few.signature() != fast.signature()) put(RouteMode.FewestChanges, few)

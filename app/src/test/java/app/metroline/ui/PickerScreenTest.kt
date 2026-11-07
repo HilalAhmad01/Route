@@ -31,5 +31,5 @@ class PickerScreenTest {
     // the list must not follow it down and hide the best matches.
     @Test fun topMatchStaysInViewWhileTypingDw() = typing("d", "w", expectTop = "Dwarka - Kakrola")
 
-    @Test fun topMatchStaysInViewWhileTypingRo() = typing("r", "o", expectTop = "Rohini East")
+    @Test fun topMatchStaysInViewWhileTypingRo() = typing("r", "o", expectTop = "Rohini")
 }

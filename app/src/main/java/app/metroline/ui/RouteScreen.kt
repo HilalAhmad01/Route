@@ -80,7 +80,7 @@ fun RouteScreen(trip: Trip) {
         buildMap {
             base[RouteMode.Fastest]?.let { put(Option.Fastest, it) }
             base[RouteMode.FewestChanges]?.let { put(Option.Fewer, it) }
-            val air = d.router.route(from, to, RouteMode.Fastest, allowAirport = true)
+            val air = d.router.route(from, to, RouteMode.Fastest, allowAirport = true, allowNamoBharat = d.router.allowsNamoBharat(from, to))
             val fast = base[RouteMode.Fastest]
             if (air != null && air.usesAirportExpress && (fast == null || air.minutes < fast.minutes)) put(Option.Airport, air)
         }
