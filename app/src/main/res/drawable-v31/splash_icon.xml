@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Launch screen logo on Android 12+: the dot appears, the route line draws to the ring, the ring pops in (~0.6 s).
+     Only here, because older Android shows an animated drawable's first frame, where the line is not drawn yet. -->
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
+            <path android:name="line" android:pathData="M36,72L36,54Q36,44 46,44L72,44" android:strokeColor="@color/ic_fg"
+                android:strokeWidth="5" android:strokeLineCap="round" android:strokeLineJoin="round"
+                android:fillColor="#00000000" android:trimPathEnd="0" />
+            <group android:name="dot" android:pivotX="36" android:pivotY="72" android:scaleX="0" android:scaleY="0">
+                <path android:pathData="M36,72m-5,0a5,5 0 1,0 10,0a5,5 0 1,0 -10,0" android:fillColor="@color/ic_fg" />
+            </group>
+            <group android:name="ring" android:pivotX="72" android:pivotY="44" android:scaleX="0" android:scaleY="0">
+                <path android:pathData="M72,44m-6,0a6,6 0 1,0 12,0a6,6 0 1,0 -12,0" android:fillColor="@color/bg"
+                    android:strokeColor="@color/ic_fg" android:strokeWidth="4" />
+            </group>
+        </vector>
+    </aapt:attr>
+    <target android:name="dot">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator android:propertyName="scaleX" android:valueFrom="0" android:valueTo="1" android:duration="180"
+                    android:interpolator="@android:interpolator/fast_out_slow_in" />
+                <objectAnimator android:propertyName="scaleY" android:valueFrom="0" android:valueTo="1" android:duration="180"
+                    android:interpolator="@android:interpolator/fast_out_slow_in" />
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="line">
+        <aapt:attr name="android:animation">
+            <objectAnimator android:propertyName="trimPathEnd" android:valueFrom="0" android:valueTo="1"
+                android:startOffset="80" android:duration="360" android:interpolator="@android:interpolator/fast_out_slow_in" />
+        </aapt:attr>
+    </target>
+    <target android:name="ring">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator android:propertyName="scaleX" android:valueFrom="0" android:valueTo="1" android:startOffset="400"
+                    android:duration="200" android:interpolator="@android:interpolator/fast_out_slow_in" />
+                <objectAnimator android:propertyName="scaleY" android:valueFrom="0" android:valueTo="1" android:startOffset="400"
+                    android:duration="200" android:interpolator="@android:interpolator/fast_out_slow_in" />
+            </set>
+        </aapt:attr>
+    </target>
+</animated-vector>

@@ -15,8 +15,8 @@ android {
         applicationId = "app.metroline"
         minSdk = 26
         targetSdk = 36
-        versionCode = 4
-        versionName = "1.2"
+        versionCode = 5
+        versionName = "1.3"
     }
 
     val keystoreFile = rootProject.file("keystore.properties")
@@ -40,6 +40,14 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             signingConfig = releaseSigning
         }
+        // The release build installed beside the Play one, for trying changes on a phone without touching its data:
+        // its own package (app.metroline.dev), named "Route dev", signed with the debug key. Never uploaded.
+        create("dev") {
+            initWith(getByName("release"))
+            applicationIdSuffix = ".dev"
+            signingConfig = signingConfigs.getByName("debug")
+            matchingFallbacks += "release"
+        }
     }
 
     dependenciesInfo {
@@ -59,9 +67,9 @@ android {
     }
     sourceSets["test"].resources.srcDir("src/main/assets")
     testOptions.unitTests.isIncludeAndroidResources = true
-    // The Compose UI tests launch a test activity that only the debug manifest declares.
+    // The Compose UI tests (all of test/.../ui) launch a test activity that only the debug manifest declares.
     testOptions.unitTests.all { test ->
-        if (test.name == "testReleaseUnitTest") test.exclude("**/ui/PickerScreenTest*")
+        if (test.name != "testDebugUnitTest") test.exclude("**/ui/**")
     }
 }
 
@@ -73,6 +81,7 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     implementation("androidx.activity:activity-compose:1.9.3")
     implementation("androidx.core:core-ktx:1.15.0")
+    implementation("androidx.core:core-splashscreen:1.0.1")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")

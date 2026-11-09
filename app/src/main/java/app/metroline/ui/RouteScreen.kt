@@ -5,6 +5,7 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -42,6 +43,7 @@ import androidx.compose.ui.graphics.layer.GraphicsLayer
 import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.foundation.border
 import androidx.compose.foundation.shape.RoundedCornerShape
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
@@ -87,6 +89,7 @@ fun RouteScreen(trip: Trip) {
     }
     var selected by remember(trip) { mutableIntStateOf(0) }
     var saved by remember(trip) { mutableStateOf(d.store.isSaved(trip)) }
+    var savedNote by remember { mutableStateOf(false) }
 
     val keys = options.keys.toList()
     val journey = keys.getOrNull(selected)?.let(options::get)
@@ -112,38 +115,54 @@ fun RouteScreen(trip: Trip) {
         IconButton(R.drawable.ic_bookmark, {
             d.store.toggleSaved(trip)
             saved = !saved
+            savedNote = saved && (savedNote || d.store.firstSave())
         }, if (saved) C.text else C.muted, if (saved) "Remove saved trip" else "Save trip")
     }
     Hairline()
 
-    Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
-        if (journey == null || fare == null) {
-            Empty("No route found between these stations")
-            return@Column
+    LaunchedEffect(savedNote) {
+        if (savedNote) {
+            delay(2600)
+            savedNote = false
         }
-        if (keys.size > 1) {
-            Segmented(keys.map { it.label }, selected, { selected = it }, Modifier.padding(start = S.page, end = S.page, top = 16.dp))
-        }
-        Column(Modifier.recordInto(pictureTop)) {
-            Column(Modifier.padding(start = S.page, end = S.page, top = 20.dp)) {
-                Text(from.displayName, style = T.title)
-                Text(
-                    buildAnnotatedString {
-                        withStyle(SpanStyle(color = C.muted)) { append("to ") }
-                        append(to.displayName)
-                    },
-                    style = T.title,
-                )
+    }
+    Box(Modifier.fillMaxSize()) {
+        Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
+            if (journey == null || fare == null) {
+                Empty("No route found between these stations")
+                return@Column
             }
-            Summary(journey, fare)
+            if (keys.size > 1) {
+                Segmented(keys.map { it.label }, selected, { selected = it }, Modifier.padding(start = S.page, end = S.page, top = 16.dp))
+            }
+            Column(Modifier.recordInto(pictureTop)) {
+                Column(Modifier.padding(start = S.page, end = S.page, top = 20.dp)) {
+                    Text(from.displayName, style = T.title)
+                    Text(
+                        buildAnnotatedString {
+                            withStyle(SpanStyle(color = C.muted)) { append("to ") }
+                            append(to.displayName)
+                        },
+                        style = T.title,
+                    )
+                }
+                Summary(journey, fare)
+            }
+            if (journey.legs.any { it.line.system in WhatsAppTicket.systems }) BookTicket(journey)
+            Column(Modifier.recordInto(pictureBottom).padding(bottom = 24.dp)) {
+                Hairline(Modifier.padding(horizontal = S.page))
+                Spacer(Modifier.height(12.dp))
+                Strip(journey)
+            }
+            Spacer(Modifier.height(8.dp))
         }
-        if (journey.legs.any { it.line.system in WhatsAppTicket.systems }) BookTicket(journey)
-        Column(Modifier.recordInto(pictureBottom).padding(bottom = 24.dp)) {
-            Hairline(Modifier.padding(horizontal = S.page))
-            Spacer(Modifier.height(12.dp))
-            Strip(journey)
-        }
-        Spacer(Modifier.height(8.dp))
+        // Said once, the first time a trip is saved: the same bookmark icon also means places, so say where trips go.
+        AnimatedVisibility(
+            savedNote,
+            Modifier.align(Alignment.BottomCenter).padding(bottom = 24.dp),
+            enter = fadeIn(enter()) + slideInVertically(enter()) { it / 2 },
+            exit = fadeOut(quick()),
+        ) { Notice("Saved · find it in the Saved tab") }
     }
 }
 

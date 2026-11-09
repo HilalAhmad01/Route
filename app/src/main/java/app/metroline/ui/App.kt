@@ -2,6 +2,7 @@ package app.metroline.ui
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
@@ -36,6 +37,7 @@ import app.metroline.R
 import app.metroline.data.Network
 import app.metroline.data.Router
 import app.metroline.data.Store
+import app.metroline.data.Tour
 import app.metroline.data.Trip
 
 class AppDeps(val net: Network, val router: Router, val store: Store, val nav: Nav)
@@ -119,39 +121,16 @@ fun App(net: Network, store: Store, nav: Nav, finish: () -> Unit) {
 
     CompositionLocalProvider(LocalDeps provides deps) {
         Box(Modifier.fillMaxSize().background(C.bg).statusBarsPadding().imePadding()) {
-            AnimatedContent(
-                targetState = nav.top,
-                transitionSpec = {
-                    (fadeIn(enter()) + slideInVertically(enter()) { 24 }) togetherWith fadeOut(quick())
-                },
-                label = "screen",
-            ) { screen ->
-                when (screen) {
-                    // Only the tab's content animates; the tab bar stays put while switching tabs.
-                    Screen.Home -> Column(Modifier.fillMaxSize()) {
-                        AnimatedContent(
-                            targetState = nav.tab,
-                            transitionSpec = {
-                                (fadeIn(enter()) + slideInVertically(enter()) { 24 }) togetherWith fadeOut(quick())
-                            },
-                            modifier = Modifier.weight(1f),
-                            label = "tab",
-                        ) { tab ->
-                            when (tab) {
-                                Tab.Plan -> PlanScreen()
-                                Tab.Map -> MapScreen()
-                                Tab.Lines -> LinesScreen()
-                                Tab.Saved -> SavedScreen()
-                            }
-                        }
-                        TabBar(nav.tab) { nav.tab = it }
-                    }
-                    is Screen.Route -> Column(Modifier.fillMaxSize().navBars()) { RouteScreen(screen.trip) }
-                    is Screen.Pick -> Column(Modifier.fillMaxSize().navBars()) { PickerScreen(screen.target) }
-                    Screen.AddPlace -> Column(Modifier.fillMaxSize().navBars()) { AddPlaceScreen() }
-                    is Screen.LineDetail -> Column(Modifier.fillMaxSize().navBars()) { LineScreen(screen.lineId) }
-                    is Screen.StationDetail -> Column(Modifier.fillMaxSize().navBars()) { StationScreen(screen.stationId) }
-                    Screen.About -> Column(Modifier.fillMaxSize().navBars()) { AboutScreen() }
+            Crossfade(store.tour != Tour.Off, animationSpec = enter(), label = "tour") { touring ->
+                if (touring) {
+                    Onboarding(
+                        onDone = store::finishTour,
+                        // Back on the first screen leaves the app on a first launch (the tour comes back next time),
+                        // and just closes a replayed tour.
+                        onBackAtStart = { if (store.tour == Tour.Replay) store.finishTour() else finish() },
+                    )
+                } else {
+                    Screens(nav)
                 }
             }
         }
@@ -159,16 +138,60 @@ fun App(net: Network, store: Store, nav: Nav, finish: () -> Unit) {
 }
 
 @Composable
-fun Modifier.navBars() = windowInsetsPadding(WindowInsets.navigationBars)
+private fun Screens(nav: Nav) = AnimatedContent(
+    targetState = nav.top,
+    transitionSpec = {
+        (fadeIn(enter()) + slideInVertically(enter()) { 24 }) togetherWith fadeOut(quick())
+    },
+    label = "screen",
+) { screen ->
+    when (screen) {
+        // Only the tab's content animates; the tab bar stays put while switching tabs.
+        Screen.Home -> Column(Modifier.fillMaxSize()) {
+            AnimatedContent(
+                targetState = nav.tab,
+                transitionSpec = {
+                    (fadeIn(enter()) + slideInVertically(enter()) { 24 }) togetherWith fadeOut(quick())
+                },
+                modifier = Modifier.weight(1f),
+                label = "tab",
+            ) { tab ->
+                when (tab) {
+                    Tab.Plan -> PlanScreen()
+                    Tab.Map -> MapScreen()
+                    Tab.Lines -> LinesScreen()
+                    Tab.Saved -> SavedScreen()
+                }
+            }
+            TabBar(nav.tab, { nav.tab = it })
+        }
+        is Screen.Route -> Column(Modifier.fillMaxSize().navBars()) { RouteScreen(screen.trip) }
+        is Screen.Pick -> Column(Modifier.fillMaxSize().navBars()) { PickerScreen(screen.target) }
+        Screen.AddPlace -> Column(Modifier.fillMaxSize().navBars()) { AddPlaceScreen() }
+        is Screen.LineDetail -> Column(Modifier.fillMaxSize().navBars()) { LineScreen(screen.lineId) }
+        is Screen.StationDetail -> Column(Modifier.fillMaxSize().navBars()) { StationScreen(screen.stationId) }
+        Screen.About -> Column(Modifier.fillMaxSize().navBars()) { AboutScreen() }
+    }
+}
 
 @Composable
-private fun TabBar(current: Tab, onSelect: (Tab) -> Unit) = Column(Modifier.background(C.bg).navBars()) {
+fun Modifier.navBars() = windowInsetsPadding(WindowInsets.navigationBars)
+
+/** [insets] off and [tabModifier] are for the copy of the tab bar drawn inside the first-launch tour. */
+@Composable
+internal fun TabBar(
+    current: Tab,
+    onSelect: (Tab) -> Unit,
+    modifier: Modifier = Modifier,
+    insets: Boolean = true,
+    tabModifier: (Tab) -> Modifier = { Modifier },
+) = Column(modifier.background(C.bg).then(if (insets) Modifier.navBars() else Modifier)) {
     Hairline()
     Row(Modifier.fillMaxWidth().height(60.dp).padding(horizontal = 8.dp), verticalAlignment = Alignment.CenterVertically) {
         for (t in Tab.entries) {
             val on = t == current
             Column(
-                Modifier.weight(1f).height(52.dp).press({ onSelect(t) }),
+                Modifier.weight(1f).height(52.dp).then(tabModifier(t)).press({ onSelect(t) }),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Spacer(Modifier.height(8.dp))

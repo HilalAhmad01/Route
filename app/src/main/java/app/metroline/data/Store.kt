@@ -17,6 +17,8 @@ data class Trip(val from: String, val to: String) {
 
 data class Place(val label: String, val stationId: String)
 
+enum class Tour { Off, FirstRun, Replay }
+
 /**
  * Stations renamed in an update, as old id to new id. Saved trips and bookmarks store the id, so without this an
  * update would silently drop any that used a renamed station. Add every rename here and keep the old ones.
@@ -73,6 +75,39 @@ class Store(context: Context, private val net: Network, private val onPlacesChan
 
     var smartCard by mutableStateOf(prefs.getBoolean("smart_card", false))
         private set
+
+    /** Whether the first-launch tour is showing. Only new users get it; it can be replayed from Saved. */
+    var tour by mutableStateOf(if (tourPending(context)) Tour.FirstRun else Tour.Off)
+        private set
+
+    /**
+     * Decided once, on the first launch of a version that has the tour, and remembered, so closing the app halfway
+     * through brings the tour back. Anyone who used the app before has something stored, or app shortcuts published
+     * on an earlier launch, and is not new.
+     */
+    private fun tourPending(context: Context): Boolean {
+        prefs.getString("tour", null)?.let { return it == "pending" }
+        val usedBefore = listOf("recent", "saved", "places", "smart_card").any(prefs::contains) ||
+            context.getSharedPreferences("shortcuts", Context.MODE_PRIVATE).contains("published")
+        prefs.edit { putString("tour", if (usedBefore) "done" else "pending") }
+        return !usedBefore
+    }
+
+    fun finishTour() {
+        tour = Tour.Off
+        prefs.edit { putString("tour", "done") }
+    }
+
+    fun replayTour() {
+        tour = Tour.Replay
+    }
+
+    /** True only the first time a trip is saved, to say once where saved trips go. */
+    fun firstSave(): Boolean {
+        if (prefs.getBoolean("saved_note_shown", false)) return false
+        prefs.edit { putBoolean("saved_note_shown", true) }
+        return true
+    }
 
     fun updateSmartCard(on: Boolean) {
         smartCard = on

@@ -40,9 +40,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -242,3 +245,15 @@ fun Toggle(on: Boolean) {
         )
     }
 }
+
+/** A short message over the screen, such as the one shown the first time a trip is saved. */
+@Composable
+fun Notice(text: String, modifier: Modifier = Modifier) = Text(
+    text,
+    style = T.secondary.copy(color = C.onPrimary, fontWeight = FontWeight.Medium),
+    modifier = modifier
+        .clip(RoundedCornerShape(S.radiusRow))
+        .background(C.text)
+        .semantics { liveRegion = LiveRegionMode.Polite }
+        .padding(horizontal = 14.dp, vertical = 9.dp),
+)

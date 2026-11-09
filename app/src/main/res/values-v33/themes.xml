@@ -1,0 +1,6 @@
+<resources>
+    <!-- Some launchers (MIUI/HyperOS among them) ask for a plain-colour launch screen; show the logo anyway. -->
+    <style name="Theme.Metro.Starting" parent="Base.Theme.Metro.Starting">
+        <item name="android:windowSplashScreenBehavior">icon_preferred</item>
+    </style>
+</resources>

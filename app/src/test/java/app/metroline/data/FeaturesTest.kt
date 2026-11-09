@@ -61,6 +61,33 @@ class FeaturesTest {
         for ((q, name) in cases) assertEquals(q, name, top(q).station.name)
     }
 
+    @Test fun sectorStationsFoundTheWayPeopleTypeThem() {
+        val cases = mapOf(
+            "Sec 18" to "Noida Sector 18",
+            "sector 18" to "Noida Sector 18",
+            "Noida 18" to "Noida Sector 18",
+            "noida sec 18" to "Noida Sector 18",
+            "noida sec-18" to "Noida Sector 18",
+            "Dwarka 21" to "Dwarka Sector 21",
+            "Dwarka Sec 21" to "Dwarka Sector 21",
+            "dwarka 10" to "Dwarka Sector 10",
+            "noida 62" to "Noida Sector 62",
+            "sec 55" to "Sector 55-56",
+            "rohini 18" to "Rohini Sector 18, 19",
+        )
+        for ((q, name) in cases) assertEquals(q, name, top(q).station.name)
+        // Ordinary names are unaffected.
+        assertEquals("Dwarka Mor", top("dwarka mor").station.name)
+        assertEquals("Noida City Centre", top("noida city").station.name)
+    }
+
+    @Test fun moreNicknames() {
+        assertEquals("Greater Kailash", top("GK").station.name)
+        assertEquals("Cyber City", top("cyber hub").station.name)
+        assertEquals("Millennium City Centre Gurugram", top("Gurgaon").station.name)
+        assertEquals("Millennium City Centre Gurugram", top("gurga").station.name)
+    }
+
     @Test fun nicknameMatchReportsTheAlias() {
         assertEquals("CP", top("cp").alias)
         assertEquals("HUDA City Centre", top("huda").alias)

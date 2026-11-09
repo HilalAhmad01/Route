@@ -69,8 +69,10 @@ class Station(
     var displayName: String = name
         internal set
 
-    internal val searchName by lazy { StationSearch.norm(name) }
-    internal val searchWords by lazy { name.lowercase().split(' ', '-', '(').map(StationSearch::norm) }
+    internal val searchNames by lazy { StationSearch.spellings(name).map(StationSearch::norm) }
+    internal val searchWords by lazy {
+        StationSearch.spellings(name).flatMap { it.lowercase().split(' ', '-', '(') }.map(StationSearch::norm).distinct()
+    }
     internal val searchAliases by lazy { aliases.map { StationSearch.norm(it) to it } }
     override fun toString() = name
 }

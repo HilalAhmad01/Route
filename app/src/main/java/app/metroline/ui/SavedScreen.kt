@@ -47,6 +47,13 @@ fun SavedScreen() {
                 IconButton(R.drawable.ic_x, { d.store.removePlace(p) }, C.muted, "Remove ${p.label} bookmark")
             }
         }
+        if (d.store.places.isNotEmpty()) {
+            Text(
+                "On Plan, tap a bookmark to start from it. Hold it to change the station.",
+                style = T.meta,
+                modifier = Modifier.padding(start = S.page, end = S.page, top = 4.dp, bottom = 4.dp),
+            )
+        }
         Row(
             Modifier.fillMaxWidth().heightIn(min = 48.dp).press({ d.nav.push(Screen.AddPlace) }).padding(horizontal = S.page),
             verticalAlignment = Alignment.CenterVertically,
@@ -88,6 +95,10 @@ fun SavedScreen() {
                 verticalAlignment = Alignment.CenterVertically,
             ) { Text("Clear recent trips", style = T.body.copy(color = C.text2)) }
         }
+        Row(
+            Modifier.fillMaxWidth().heightIn(min = 48.dp).press({ d.store.replayTour() }).padding(horizontal = S.page),
+            verticalAlignment = Alignment.CenterVertically,
+        ) { Text("Show the tour again", style = T.body.copy(color = C.text2)) }
         Row(
             Modifier.fillMaxWidth().heightIn(min = 48.dp).press({ d.nav.push(Screen.About) }).padding(horizontal = S.page),
             verticalAlignment = Alignment.CenterVertically,

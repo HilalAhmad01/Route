@@ -84,7 +84,9 @@ RENAME = {
 
 ALIASES = {
     "dmrc:Rajiv Chowk": ["CP", "Connaught Place"],
-    "dmrc:Millennium City Centre Gurugram": ["HUDA City Centre", "HUDA", "MCC"],
+    "dmrc:Millennium City Centre Gurugram": ["HUDA City Centre", "HUDA", "MCC", "Gurgaon"],
+    "dmrc:Greater Kailash": ["GK"],
+    "rmgl:Cyber City": ["Cyber Hub"],
     "dmrc:Lok Kalyan Marg": ["Race Course"],
     "dmrc:Seva Teerth": ["Udyog Bhawan"],
     "dmrc:Supreme Court": ["Pragati Maidan"],
